@@ -27,7 +27,7 @@ helm library release:
     # Enable experimental helm features
     - export HELM_EXPERIMENTAL_OCI=1
     # Save off the chart
-    - helm chart save gluon ${CI_REGISTRY_IMAGE}/gluon:${CHART_VERSION}
+    - helm chart save chart ${CI_REGISTRY_IMAGE}/gluon:${CHART_VERSION}
     # Login to the repo registry
     - echo ${CI_REGISTRY_PASSWORD} | helm registry login ${CI_REGISTRY_IMAGE} -u ${CI_REGISTRY_USER} --password-stdin
     # Push to the repo registry
