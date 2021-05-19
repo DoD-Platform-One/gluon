@@ -1,4 +1,4 @@
-{{- define "bb-test-lib.cypress-sa" }}
+{{- define "gluon.tests.cypress-sa" }}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -9,7 +9,7 @@ metadata:
     "helm.sh/hook-weight": "-5"
 {{- end }}
 
-{{- define "bb-test-lib.cypress-role" }}
+{{- define "gluon.tests.cypress-role" }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -24,7 +24,7 @@ rules:
   verbs: ["create", "get", "list", "delete"]
 {{- end }}
 
-{{- define "bb-test-lib.cypress-rolebinding" }}
+{{- define "gluon.tests.cypress-rolebinding" }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
@@ -43,10 +43,10 @@ subjects:
   namespace: {{ .Release.Namespace }}
 {{- end }}
 
-{{- define "bb-test-lib.cypress-rbac" }}
-{{- include "bb-test-lib.cypress-sa" . }}
+{{- define "gluon.tests.cypress-rbac" }}
+{{- include "gluon.tests.cypress-sa" . }}
 ---
-{{- include "bb-test-lib.cypress-role" . }}
+{{- include "gluon.tests.cypress-role" . }}
 ---
-{{- include "bb-test-lib.cypress-rolebinding" . }}
+{{- include "gluon.tests.cypress-rolebinding" . }}
 {{- end }}
