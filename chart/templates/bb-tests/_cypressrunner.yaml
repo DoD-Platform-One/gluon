@@ -1,4 +1,4 @@
-{{- define "bb-test-lib.cypress-runner.tpl" }}
+{{- define "gluon.tests.cypress-runner.tpl" }}
 kind: Pod
 apiVersion: v1
 metadata:
@@ -112,33 +112,33 @@ spec:
     - name: private-registry
 {{- end }}
 
-{{- define "bb-test-lib.cypress-runner.base" }}
+{{- define "gluon.tests.cypress-runner.base" }}
 {{- if .Values.bbtests }}
 {{- if .Values.bbtests.enabled }}
 
 {{- if .Values.bbtests.cypress }}
 {{- if or .Values.bbtests.cypress.artifacts .Values.bbtests.cypress.exports }}
-{{- include "bb-test-lib.cypress-rbac" . }}
+{{- include "gluon.tests.cypress-rbac" . }}
 ---
 {{- end }}
 {{- end }}
 
-{{- include "bb-test-lib.cypress-runner.tpl" . }}
+{{- include "gluon.tests.cypress-runner.tpl" . }}
 {{- end }}
 {{- end }}
 {{- end }}
 
-{{- define "bb-test-lib.cypress-runner.overrides" }}
+{{- define "gluon.tests.cypress-runner.overrides" }}
 {{- $values := (first .) }}
 {{- if $values.Values.bbtests }}
 {{- if $values.Values.bbtests.enabled }}
 {{- if $values.Values.bbtests.cypress }}
 {{- if or $values.Values.bbtests.cypress.artifacts $values.Values.bbtests.cypress.exports }}
-{{- include "bb-test-lib.cypress-rbac" $values }}
+{{- include "gluon.tests.cypress-rbac" $values }}
 ---
 {{- end }}
 {{- end }}
-{{- include "bb-test-lib.util.merge" (append . "bb-test-lib.cypress-runner.tpl") }}
+{{- include "gluon.util.merge" (append . "gluon.tests.cypress-runner.tpl") }}
 {{- end }}
 {{- end }}
 {{- end }}

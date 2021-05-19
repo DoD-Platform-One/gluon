@@ -1,4 +1,4 @@
-{{- define "bb-test-lib.cypress-configmap.base" }}
+{{- define "gluon.tests.cypress-configmap.base" }}
 {{- if .Values.bbtests }}
 {{- if .Values.bbtests.enabled }}
 apiVersion: v1
@@ -18,11 +18,11 @@ data:
 {{- end }}
 {{- end }}
 
-{{- define "bb-test-lib.cypress-configmap.overrides" }}
+{{- define "gluon.tests.cypress-configmap.overrides" }}
 {{- $values := (first .) }}
 {{- if $values.Values.bbtests }}
 {{- if $values.Values.bbtests.enabled }}
-{{- include "bb-test-lib.util.merge" (append . "bb-test-lib.cypress-configmap.base") }}
+{{- include "gluon.util.merge" (append . "gluon.tests.cypress-configmap.base") }}
 {{- end }}
 {{- end }}
 {{- end }}
