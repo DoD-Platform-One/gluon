@@ -23,12 +23,12 @@ helm library release:
   image: registry.dso.mil/platform-one/big-bang/pipeline-templates/pipeline-templates/k3d-builder:0.0.5
   script:
     # Get Chart version
-    - export CHART_VERSION=$(yq e ".version" "bb-test-lib/Chart.yaml")
+    - export CHART_VERSION=$(yq e ".version" "chart/Chart.yaml")
     # Enable experimental helm features
     - export HELM_EXPERIMENTAL_OCI=1
     # Save off the chart
-    - helm chart save bb-test-lib ${CI_REGISTRY_IMAGE}/bb-test-lib:${CHART_VERSION}
+    - helm chart save gluon ${CI_REGISTRY_IMAGE}/gluon:${CHART_VERSION}
     # Login to the repo registry
     - echo ${CI_REGISTRY_PASSWORD} | helm registry login ${CI_REGISTRY_IMAGE} -u ${CI_REGISTRY_USER} --password-stdin
     # Push to the repo registry
-    - helm chart push ${CI_REGISTRY_IMAGE}/bb-test-lib:${CHART_VERSION}
+    - helm chart push ${CI_REGISTRY_IMAGE}/gluon:${CHART_VERSION}
