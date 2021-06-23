@@ -18,6 +18,21 @@ spec:
   {{- end }}
   {{- end }}
   {{- end }}
+  {{- if and .Values.bbtests .Values.istio.enabled }}
+  {{- $ingressGateway := (lookup "v1" "Service" "istio-system" "istio-ingressgateway") -}}
+  {{- $igStatus := $ingressGateway.status | default dict }}
+  {{- $igLoadBalancer := $igStatus.loadBalancer | default dict }}
+  {{- $igIngress := $igLoadBalancer.ingress | default list }}
+  {{- $igFirst := first $igIngress | default dict }}
+  {{- if and (hasKey $igFirst "ip") .Values.bbtests.istio }}
+  hostAliases:
+  - ip: "{{ $igFirst.ip }}"
+    hostnames:
+    {{- range .Values.bbtests.istio.hosts }}
+      - {{ tpl . $ }}
+    {{- end }}
+  {{- end }}
+  {{- end }}
   containers:
     - name: {{ .Chart.Name }}-cypress-test
       image: registry.dso.mil/platform-one/big-bang/pipeline-templates/pipeline-templates/cypress/kubectl:5.0.0

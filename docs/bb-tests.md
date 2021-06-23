@@ -48,7 +48,7 @@ metadata:
 ```
 
 The second step to implementing these tests will be including values in your `test-values.yaml` file that would be
-needed for the tests. There are 6 main values you will want to consider, all values are optional:
+needed for the tests. There are several values you will want to consider, all values are optional:
 
 - `bbtests.cypress.artifacts`: This should be set to true in almost all cases so that artifacts are exported from the
 helm test pods and available as artifacts in the pipeline. This also provides them when running locally
@@ -66,6 +66,8 @@ helm test pods and available as artifacts in the pipeline. This also provides th
   helm templating for these values.
 - `bbtest.cypress.additionalVolumeMounts`: This defines additional volumes to mount into the main cypress container itself.
   This takes normal Kubernetes `volumeMount` configuration in `yaml`. This supports `Helm` templating for values.
+- `bbtests.istio.hosts`: This defines istio hostnames to add to the cypress test pods /etc/hosts for resolution.
+  It should be defined as a list and supports helm templating. Note this will also apply to any script tests.
 
 A sample is included below:
 
@@ -102,6 +104,9 @@ bbtests:
           secretKeyRef:
             name: "{{ .Values.minioRootCreds }}"
             key: accesskey
+  istio:
+    hosts:
+      - "minio.{{ .Values.hostname }}"
 ```
 
 NOTE: ENVs must be prefixed with `cypress_` to be available to Cypress.
@@ -191,7 +196,7 @@ metadata:
 ```
 
 The second step to implementing these tests will be including values in your `test-values.yaml` file that would be
-needed for the tests. There are 3 main values you will want to consider, only the image value is required:
+needed for the tests. There are several values you will want to consider, only the image value is required:
 
 - `bbtests.scripts.image`: REQUIRED, this is the image name that should be used to run your script. This should be a
   small image with the CLI tools needed (for example, to test Minio you would want an image with Minio CLI). Ironbank
@@ -208,6 +213,8 @@ needed for the tests. There are 3 main values you will want to consider, only th
   helm templating for these values.
 - `bbtest.scripts.additionalVolumeMounts`: This defines additional volumes to mount into the main cypress container itself.
   This takes normal Kubernetes `volumeMount` configuration in `yaml`. This supports `Helm` templating for values.
+- `bbtests.istio.hosts`: This defines istio hostnames to add to the script test pods /etc/hosts for resolution.
+  It should be defined as a list and supports helm templating. Note this will also apply to any cypress tests.
 
 A sample is included below:
 
@@ -242,6 +249,9 @@ bbtests:
           secretKeyRef:
             name: "{{ .Values.minioRootCreds }}"
             key: accesskey
+  istio:
+    hosts:
+      - "minio.{{ .Values.hostname }}"
 ```
 
 Finally, any script files (the helm template will run any and all files in the scripts folder) must be placed in the
