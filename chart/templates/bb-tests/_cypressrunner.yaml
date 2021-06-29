@@ -11,6 +11,7 @@ metadata:
   labels:
     helm-test: enabled
 spec:
+  {{- if hasKey .Values "istio" }}
   {{- if .Values.bbtests }}
   {{- if .Values.bbtests.cypress }}
   {{- if or .Values.bbtests.cypress.artifacts .Values.bbtests.cypress.exports }}
@@ -31,6 +32,7 @@ spec:
     {{- range .Values.bbtests.istio.hosts }}
       - {{ tpl . $ }}
     {{- end }}
+  {{- end }}
   {{- end }}
   {{- end }}
   containers:

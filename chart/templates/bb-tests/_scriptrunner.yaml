@@ -14,6 +14,7 @@ metadata:
   labels:
     helm-test: enabled
 spec:
+  {{- if hasKey .Values "istio" }}
   {{- if and .Values.bbtests .Values.istio.enabled }}
   {{- $ingressGateway := (lookup "v1" "Service" "istio-system" "istio-ingressgateway") -}}
   {{- $igStatus := $ingressGateway.status | default dict }}
@@ -27,6 +28,7 @@ spec:
     {{- range .Values.bbtests.istio.hosts }}
       - {{ tpl . $ }}
     {{- end }}
+  {{- end }}
   {{- end }}
   {{- end }}
   containers:
