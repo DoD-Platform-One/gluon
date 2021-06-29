@@ -11,7 +11,6 @@ metadata:
   labels:
     helm-test: enabled
 spec:
-  {{- if hasKey .Values "istio" }}
   {{- if .Values.bbtests }}
   {{- if .Values.bbtests.cypress }}
   {{- if or .Values.bbtests.cypress.artifacts .Values.bbtests.cypress.exports }}
@@ -19,6 +18,7 @@ spec:
   {{- end }}
   {{- end }}
   {{- end }}
+  {{- if hasKey .Values "istio" }}
   {{- if and .Values.bbtests .Values.istio.enabled }}
   {{- $ingressGateway := (lookup "v1" "Service" "istio-system" "istio-ingressgateway") -}}
   {{- $igStatus := $ingressGateway.status | default dict }}
