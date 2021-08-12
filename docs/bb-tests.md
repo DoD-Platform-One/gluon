@@ -66,6 +66,7 @@ helm test pods and available as artifacts in the pipeline. This also provides th
   helm templating for these values.
 - `bbtest.cypress.additionalVolumeMounts`: This defines additional volumes to mount into the main cypress container itself.
   This takes normal Kubernetes `volumeMount` configuration in `yaml`. This supports `Helm` templating for values.
+- `bbtest.cypress.resources`: This defines requests and limits to set in the main cypress container itself. This takes normal Kubernetes `resources` configuration in `yaml`. This supports `Helm` templating for values.
 - `bbtests.istio.hosts`: This defines istio hostnames to add to the cypress test pods /etc/hosts for resolution.
   It should be defined as a list and supports helm templating. Note this will also apply to any script tests.
 
@@ -104,6 +105,13 @@ bbtests:
           secretKeyRef:
             name: "{{ .Values.minioRootCreds }}"
             key: accesskey
+    resources:
+      requests:
+        cpu: "1"
+        memory: "1Gi"
+      limits:
+        cpu: "1"
+        memory: "1Gi"
   istio:
     hosts:
       - "minio.{{ .Values.hostname }}"
@@ -213,6 +221,7 @@ needed for the tests. There are several values you will want to consider, only t
   helm templating for these values.
 - `bbtest.scripts.additionalVolumeMounts`: This defines additional volumes to mount into the main cypress container itself.
   This takes normal Kubernetes `volumeMount` configuration in `yaml`. This supports `Helm` templating for values.
+- `bbtest.scripts.resources`: This defines requests and limits to set in the main script container itself. This takes normal Kubernetes `resources` configuration in `yaml`. This supports `Helm` templating for values.
 - `bbtests.istio.hosts`: This defines istio hostnames to add to the script test pods /etc/hosts for resolution.
   It should be defined as a list and supports helm templating. Note this will also apply to any cypress tests.
 
@@ -249,6 +258,13 @@ bbtests:
           secretKeyRef:
             name: "{{ .Values.minioRootCreds }}"
             key: accesskey
+    resources:
+      requests:
+        cpu: "1"
+        memory: "1Gi"
+      limits:
+        cpu: "1"
+        memory: "1Gi"
   istio:
     hosts:
       - "minio.{{ .Values.hostname }}"
