@@ -111,6 +111,22 @@ spec:
       {{- end }}
       {{- end }}
       {{- end }}
+      resources:
+      {{- if .Values.bbtests.cypress.resources }}
+        requests:
+          cpu: {{ .Values.bbtests.cypress.resources.requests.cpu | quote }}
+          memory: {{ .Values.bbtests.cypress.resources.requests.memory | quote }}
+        limits:
+          cpu: {{ .Values.bbtests.cypress.resources.requests.cpu | quote }}
+          memory: {{ .Values.bbtests.cypress.resources.requests.memory | quote }}
+      {{- else }}
+        requests:
+          cpu: "1"
+          memory: "1Gi"
+        limits:
+          cpu: "1"
+          memory: "1Gi"
+      {{- end }}
   restartPolicy: Never
   volumes:
     - name: cypress-tests
