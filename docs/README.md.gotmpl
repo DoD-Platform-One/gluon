@@ -1,0 +1,45 @@
+{{ template "chart.header" . }}
+{{ template "chart.deprecationWarning" . }}
+
+{{ template "chart.badgesSection" . }}
+
+{{ template "chart.description" . }}
+
+{{ template "chart.homepageLine" . }}
+
+{{ template "chart.sourcesSection" . }}
+
+// Need to get this working to print every `.md` file in docs/
+## More Documentation
+{{ base "docs/*" }}
+
+
+## Pre-Requisites
+
+* Kubernetes Cluster deployed
+* Kubernetes config installed in `~/.kube/config`
+* Helm installed
+
+Install Helm
+
+https://helm.sh/docs/intro/install/
+
+## Deployment
+
+```bash
+Clone down the repository
+cd {{ template "chart.name" . }}
+helm install {{ template "chart.name" . }} chart
+```
+
+{{ template "chart.maintainersSection" . }}
+
+{{ template "chart.sourcesSection" . }}
+
+{{ template "chart.requirementsSection" . }}
+
+{{ template "chart.valuesSection" . }}
+
+## Contributing
+
+Please see the [contributing guide](https://repo1.dso.mil/platform-one/big-bang/bigbang/-/blob/master/CONTRIBUTING.md) if you are interested in contributing to Big Bang.
