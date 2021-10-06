@@ -10,8 +10,11 @@
 {{ template "chart.sourcesSection" . }}
 
 // Need to get this working to print every `.md` file in docs/
-## More Documentation
-{{ base "docs/*" }}
+## Documentation
+{{- $docsList := ParseGlob("docs/*.md") }}
+{{- range.$docsList }}
+- [{{ base {{ . }} }}]({{ . }})
+{{- end }}
 
 
 ## Pre-Requisites
@@ -31,8 +34,6 @@ Clone down the repository
 cd {{ template "chart.name" . }}
 helm install {{ template "chart.name" . }} chart
 ```
-
-{{ template "chart.maintainersSection" . }}
 
 {{ template "chart.sourcesSection" . }}
 
