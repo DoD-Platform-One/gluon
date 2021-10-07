@@ -7,8 +7,9 @@
 
 {{ template "chart.homepageLine" . }}
 
-## Upstream References
-{{ template "chart.sourcesList" . }}
+
+{{ define "chart.sourcesHeader" }}## Upstream References{{ end}}
+{{ template "chart.sourcesSection" . }}
 
 ## Learn More
 - [Application Overview](docs/overview.md)
@@ -26,15 +27,13 @@ https://helm.sh/docs/intro/install/
 
 ## Deployment
 
+* Clone down the repository
+* cd into directory
 ```bash
-Clone down the repository
-cd {{ template "chart.name" . }}
-helm install {{ template "chart.name" . }} chart
+helm install {{ template "chart.name" . }} chart/
 ```
 
 {{ template "chart.kubeVersionLine" . }}
-
-{{ template "chart.requirementsSection" . }}
 
 {{ template "chart.valuesSection" . }}
 
