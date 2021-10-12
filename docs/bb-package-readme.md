@@ -13,3 +13,8 @@ docker run --rm -v "$(pwd):/helm-docs" -u $(id -u) jnorwood/helm-docs:v1.5.0 -s 
 ```
 
 This will output into the existing (or populate) README.md that is in the root of the package repo. Push up this new README.md up with your package changes.
+
+## Notes
+[Helm-docs](https://github.com/norwoodj/helm-docs) uses a `.helmdocsignore` file to ignore dependencies or other linked charts, otherwise by default all found Chart.yaml's will be outputted into the generated README.
+
+[helmdocsignore information](https://github.com/norwoodj/helm-docs#ignoring-chart-directories)
