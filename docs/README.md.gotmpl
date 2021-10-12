@@ -5,11 +5,13 @@
 
 {{ template "chart.description" . }}
 
-{{ template "chart.homepageLine" . }}
-
-
-{{ define "chart.sourcesHeader" }}## Upstream References{{ end }}
-{{ template "chart.sourcesSection" . }}
+{{ if or .Home .Sources }}
+## Upstream References
+{{- if .Home }}
+* <{{ template "chart.homepage" . }}>
+{{- end }}
+{{ template "chart.sourcesList" . }}
+{{ end }}
 
 ## Learn More
 - [Application Overview](docs/overview.md)
