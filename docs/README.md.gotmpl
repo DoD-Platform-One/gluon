@@ -21,6 +21,8 @@
 * Kubernetes config installed in `~/.kube/config`
 * Helm installed
 
+{{ template "chart.kubeVersionLine" . }}
+
 Install Helm
 
 https://helm.sh/docs/intro/install/
@@ -32,8 +34,6 @@ https://helm.sh/docs/intro/install/
 ```bash
 helm install {{ template "chart.name" . }} chart/
 ```
-
-{{ template "chart.kubeVersionLine" . }}
 
 {{ template "chart.valuesSection" . }}
 
