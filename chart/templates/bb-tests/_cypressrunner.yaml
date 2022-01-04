@@ -54,7 +54,7 @@ spec:
           mkdir -p /test/cypress/integration/
           cp /src/*.js /test/cypress/integration/
           mkdir -p exports
-          (cypress run --browser chrome --headless && export EXIT_CODE=$?) || export EXIT_CODE=$?
+          (cypress run --browser chrome --headless --spec "/test/cypress/integration/*[!plugins].js" && export EXIT_CODE=$?) || export EXIT_CODE=$?
           {{- if .Values.bbtests }}
           {{- if .Values.bbtests.cypress }}
           {{- if .Values.bbtests.cypress.exports }}
