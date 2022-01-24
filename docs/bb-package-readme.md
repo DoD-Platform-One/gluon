@@ -10,6 +10,7 @@ To update/generate this README.md for a package using the template perform the f
 curl -O https://repo1.dso.mil/platform-one/big-bang/apps/library-charts/gluon/-/raw/master/docs/README.md.gotmpl
 curl -O https://repo1.dso.mil/platform-one/big-bang/apps/library-charts/gluon/-/raw/master/docs/.helmdocsignore
 docker run --rm -v "$(pwd):/helm-docs" -u $(id -u) jnorwood/helm-docs:v1.5.0 -s file -t /helm-docs/README.md.gotmpl --dry-run > README.md
+rm .helmdocsignore README.md.gotmpl
 ```
 
 This will output into the existing (or populate) README.md that is in the root of the package repo. Push up this new README.md up with your package changes.
