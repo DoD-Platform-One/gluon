@@ -51,11 +51,11 @@ spec:
           {{- if .Values.bbtests }}
           {{- if .Values.bbtests.cypress }}
           {{- if .Values.bbtests.cypress.artifacts }}
-          if [[ `ls /test/cypress/screenshots/*` ]]; then
+          if [[ -n "$(ls /test/cypress/screenshots/* 2>/dev/null)" ]]; then
             mkdir -p /cypress/screenshots/{{ .Release.Namespace }}
             cp /test/cypress/screenshots/* /cypress/screenshots/{{ .Release.Namespace }}/
           fi
-          if [[ `ls /test/cypress/videos/*` ]]; then
+          if [[ -n "$(ls /test/cypress/videos/* 2>/dev/null)" ]]; then
             mkdir -p /cypress/videos/{{ .Release.Namespace }}
             cp /test/cypress/videos/* /cypress/videos/{{ .Release.Namespace }}/
           fi
