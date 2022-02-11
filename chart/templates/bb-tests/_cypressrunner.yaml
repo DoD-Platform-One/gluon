@@ -13,25 +13,8 @@ metadata:
 spec:
   {{- if .Values.bbtests }}
   {{- if .Values.bbtests.cypress }}
-  {{- if or .Values.bbtests.cypress.artifacts .Values.bbtests.cypress.exports }}
+  {{- if .Values.bbtests.cypress.exports }}
   serviceAccountName: {{ .Chart.Name }}-cypress-sa
-  {{- end }}
-  {{- end }}
-  {{- end }}
-  {{- if hasKey .Values "istio" }}
-  {{- if and .Values.bbtests .Values.istio.enabled }}
-  {{- $ingressGateway := (lookup "v1" "Service" "istio-system" "istio-ingressgateway") -}}
-  {{- $igStatus := $ingressGateway.status | default dict }}
-  {{- $igLoadBalancer := $igStatus.loadBalancer | default dict }}
-  {{- $igIngress := $igLoadBalancer.ingress | default list }}
-  {{- $igFirst := first $igIngress | default dict }}
-  {{- if and (hasKey $igFirst "ip") .Values.bbtests.istio }}
-  hostAliases:
-  - ip: "{{ $igFirst.ip }}"
-    hostnames:
-    {{- range .Values.bbtests.istio.hosts }}
-      - {{ tpl . $ }}
-    {{- end }}
   {{- end }}
   {{- end }}
   {{- end }}
@@ -68,21 +51,13 @@ spec:
           {{- if .Values.bbtests }}
           {{- if .Values.bbtests.cypress }}
           {{- if .Values.bbtests.cypress.artifacts }}
-          if [ -d /test/cypress/screenshots ]; then
-            tar -I 'gzip -9' -cf cypress-screenshots.tar.gz /test/cypress/screenshots
-            cat cypress-screenshots.tar.gz | base64 > cypress-screenshots.tar.gz.b64
-            if kubectl get configmap -n {{ .Release.Namespace }} cypress-screenshots &>/dev/null; then
-              kubectl delete configmap -n {{ .Release.Namespace }} cypress-screenshots
-            fi
-            kubectl create configmap -n {{ .Release.Namespace }} cypress-screenshots --from-file cypress-screenshots.tar.gz.b64
+          if [[ `ls /test/cypress/screenshots/*` ]]; then
+            mkdir -p /cypress/screenshots/{{ .Release.Namespace }}
+            cp /test/cypress/screenshots/* /cypress/screenshots/{{ .Release.Namespace }}/
           fi
-          if [ -d /test/cypress/videos ]; then
-            tar -I 'gzip -9' -cf cypress-videos.tar.gz /test/cypress/videos
-            cat cypress-videos.tar.gz | base64 > cypress-videos.tar.gz.b64
-            if kubectl get configmap -n {{ .Release.Namespace }} cypress-videos &>/dev/null; then
-              kubectl delete configmap -n {{ .Release.Namespace }} cypress-videos
-            fi
-            kubectl create configmap -n {{ .Release.Namespace }} cypress-videos --from-file cypress-videos.tar.gz.b64
+          if [[ `ls /test/cypress/videos/*` ]]; then
+            mkdir -p /cypress/videos/{{ .Release.Namespace }}
+            cp /test/cypress/videos/* /cypress/videos/{{ .Release.Namespace }}/
           fi
           {{- end }}
           {{- end }}
@@ -94,6 +69,14 @@ spec:
           mountPath: /src
         - name: workdir
           mountPath: /test
+        {{- if .Values.bbtests }}
+        {{- if .Values.bbtests.cypress }}
+        {{- if .Values.bbtests.cypress.artifacts }}
+        - name: cypress-artifacts
+          mountPath: /cypress
+        {{- end }}
+        {{- end }}
+        {{- end }}
         {{- if .Values.bbtests }}
         {{- if .Values.bbtests.cypress }}
         {{- with .Values.bbtests.cypress.additionalVolumeMounts }}
@@ -138,13 +121,22 @@ spec:
         name: "{{ .Chart.Name }}-cypress-config"
     - name: workdir
       emptyDir: {}
-      {{- if .Values.bbtests }}
-      {{- if .Values.bbtests.cypress }}
-      {{- with .Values.bbtests.cypress.additionalVolumes }}
-        {{- tpl (toYaml .) $ | nindent 4 }}
-      {{- end }}
-      {{- end }}
-      {{- end }}
+    {{- if .Values.bbtests }}
+    {{- if .Values.bbtests.cypress }}
+    {{- if .Values.bbtests.cypress.artifacts }}
+    - name: cypress-artifacts
+      hostPath:
+        path: /cypress
+    {{- end }}
+    {{- end }}
+    {{- end }}
+    {{- if .Values.bbtests }}
+    {{- if .Values.bbtests.cypress }}
+    {{- with .Values.bbtests.cypress.additionalVolumes }}
+      {{- tpl (toYaml .) $ | nindent 4 }}
+    {{- end }}
+    {{- end }}
+    {{- end }}
   imagePullSecrets:
     - name: private-registry
 {{- end }}
@@ -154,7 +146,7 @@ spec:
 {{- if .Values.bbtests.enabled }}
 
 {{- if .Values.bbtests.cypress }}
-{{- if or .Values.bbtests.cypress.artifacts .Values.bbtests.cypress.exports }}
+{{- if .Values.bbtests.cypress.exports }}
 {{- include "gluon.tests.cypress-rbac" . }}
 ---
 {{- end }}
@@ -170,7 +162,7 @@ spec:
 {{- if $values.Values.bbtests }}
 {{- if $values.Values.bbtests.enabled }}
 {{- if $values.Values.bbtests.cypress }}
-{{- if or $values.Values.bbtests.cypress.artifacts $values.Values.bbtests.cypress.exports }}
+{{- if $values.Values.bbtests.cypress.exports }}
 {{- include "gluon.tests.cypress-rbac" $values }}
 ---
 {{- end }}
