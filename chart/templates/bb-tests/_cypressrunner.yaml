@@ -11,6 +11,10 @@ metadata:
   labels:
     helm-test: enabled
 spec:
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
   {{- if .Values.bbtests }}
   {{- if .Values.bbtests.cypress }}
   {{- if .Values.bbtests.cypress.exports }}
@@ -20,6 +24,11 @@ spec:
   {{- end }}
   containers:
     - name: {{ .Chart.Name }}-cypress-test
+      securityContext:
+        capabilities:
+          drop:
+          - ALL
+        readOnlyRootFilesystem: true
       {{- if .Values.bbtests }}
       {{- if .Values.bbtests.cypress }}
       image: {{ .Values.bbtests.cypress.image | default "registry.dso.mil/platform-one/big-bang/pipeline-templates/pipeline-templates/cypress/kubectl:8.3.1" }}
@@ -69,6 +78,8 @@ spec:
           mountPath: /src
         - name: workdir
           mountPath: /test
+        - name: tmpdir
+          mountPath: /tmp
         {{- if .Values.bbtests }}
         {{- if .Values.bbtests.cypress }}
         {{- if .Values.bbtests.cypress.artifacts }}
@@ -84,10 +95,12 @@ spec:
         {{- end }}
         {{- end }}
         {{- end }}
+      env:
+        - name: XDG_CONFIG_HOME
+          value: "/tmp"
       {{- if .Values.bbtests }}
       {{- if .Values.bbtests.cypress }}
       {{- if or .Values.bbtests.cypress.envs .Values.bbtests.cypress.secretEnvs }}
-      env:
       {{- range $k, $v := .Values.bbtests.cypress.envs }}
         - name: {{ tpl $k $ }}
           value: {{ tpl $v $ | quote }}
@@ -120,6 +133,8 @@ spec:
       configMap:
         name: "{{ .Chart.Name }}-cypress-config"
     - name: workdir
+      emptyDir: {}
+    - name: tmpdir
       emptyDir: {}
     {{- if .Values.bbtests }}
     {{- if .Values.bbtests.cypress }}
