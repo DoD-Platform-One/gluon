@@ -14,6 +14,10 @@ metadata:
   labels:
     helm-test: enabled
 spec:
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
   {{- if hasKey .Values "istio" }}
   {{- if and .Values.bbtests .Values.istio.enabled }}
   {{- $ingressGateway := (lookup "v1" "Service" "istio-system" "istio-ingressgateway") -}}
@@ -33,6 +37,11 @@ spec:
   {{- end }}
   containers:
     - name: {{ .Chart.Name }}-script-test
+      securityContext:
+        capabilities:
+          drop:
+          - ALL
+        readOnlyRootFilesystem: true
       image: {{ tpl .Values.bbtests.scripts.image $ }}
       imagePullPolicy: IfNotPresent
       workingDir: /test
