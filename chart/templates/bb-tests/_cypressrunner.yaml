@@ -31,7 +31,7 @@ spec:
         readOnlyRootFilesystem: true
       {{- if .Values.bbtests }}
       {{- if .Values.bbtests.cypress }}
-      image: {{ .Values.bbtests.cypress.image | default "registry.dso.mil/platform-one/big-bang/pipeline-templates/pipeline-templates/cypress/kubectl:8.3.1" }}
+      image: {{ .Values.bbtests.cypress.image | default "registry.dso.mil/platform-one/big-bang/pipeline-templates/pipeline-templates/cypress/kubectl:9.7.0" }}
       {{- end }}
       {{- end }}
       imagePullPolicy: IfNotPresent
