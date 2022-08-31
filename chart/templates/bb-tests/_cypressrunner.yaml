@@ -7,7 +7,6 @@ metadata:
   annotations:
     "helm.sh/hook": test-success
     "helm.sh/hook-weight": "5"
-    sidecar.istio.io/inject: "false"
   labels:
     helm-test: enabled
 spec:
@@ -40,6 +39,8 @@ spec:
       - "/bin/bash"
       - "-c"
       - |
+        trap 'curl -s -X POST http://localhost:15000/quitquitquit || true' ERR
+        export EXIT_CODE=0
         set -e
         if [[ -d /src && -n "$(ls /src/* 2>/dev/null)" ]]; then
           cp /src/cypress.json /test/
@@ -71,8 +72,9 @@ spec:
           {{- end }}
           {{- end }}
           {{- end }}
-          exit ${EXIT_CODE}
         fi
+        curl -s -X POST http://localhost:15000/quitquitquit || true
+        exit ${EXIT_CODE}
       volumeMounts:
         - name: cypress-tests
           mountPath: /src

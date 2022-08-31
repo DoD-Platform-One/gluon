@@ -10,7 +10,6 @@ metadata:
   annotations:
     "helm.sh/hook": test-success
     "helm.sh/hook-weight": "10"
-    sidecar.istio.io/inject: "false"
   labels:
     helm-test: enabled
 spec:
@@ -49,6 +48,7 @@ spec:
         - "/bin/bash"
         - "-c"
         - |
+          trap 'curl -s -X POST http://localhost:15000/quitquitquit || true' ERR
           set -e
           if [[ -d /src && -n "$(ls /src/* 2>/dev/null)" ]]; then
             cp /src/* /test/
@@ -75,6 +75,7 @@ spec:
               ./${script}
             done
           fi
+          curl -s -X POST http://localhost:15000/quitquitquit || true
       volumeMounts:
         - name: script-tests
           mountPath: /src
