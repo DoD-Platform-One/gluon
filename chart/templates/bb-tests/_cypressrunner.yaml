@@ -107,8 +107,8 @@ spec:
         - name: {{ tpl $k $ }}
           value: {{ tpl $v $ | quote }}
       {{- end }}
-      {{- range .Values.bbtests.cypress.secretEnvs }}
-        - {{ tpl (toYaml .) $ | nindent 10 }}
+      {{- if .Values.bbtests.cypress.secretEnvs }}
+      {{- tpl (toYaml .Values.bbtests.cypress.secretEnvs) $ | nindent 8 }}
       {{- end }}
       {{- end }}
       {{- end }}

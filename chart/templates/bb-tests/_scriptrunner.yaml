@@ -102,8 +102,8 @@ spec:
         - name: {{ tpl $k $ }}
           value: {{ tpl $v $ | quote }}
       {{- end }}
-      {{- range .Values.bbtests.scripts.secretEnvs }}
-        - {{ tpl (toYaml .) $ | nindent 10 }}
+      {{- if .Values.bbtests.scripts.secretEnvs }}
+      {{- tpl (toYaml .Values.bbtests.scripts.secretEnvs) $ | nindent 8 }}
       {{- end }}
       {{- end }}
       resources:
