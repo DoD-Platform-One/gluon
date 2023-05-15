@@ -118,39 +118,62 @@ bbtests:
 
 NOTE: ENVs must be prefixed with `cypress_` to be available to Cypress.
 
-Finally, a `cypress.json` file and all `*.spec.js` tests must be placed at the same directory level
-`chart/tests/cypress/`. Your `cypress.json` should follow the traditional cypress format, an example is included below:
+To setup the package test directory `chart/tests`: 
 
+* Create a `cypress.config.ts`
+```typescript
+import { defineConfig } from "cypress";
+
+export default defineConfig({
+  e2e: {
+    videoCompression: false,
+    env: {
+      url: "https://neuvector.bigbang.dev"
+    },
+    supportFile: false,
+    setupNodeEvents(on, config) {
+      // implement node event listeners here
+    },
+  },
+});
+```
+* Install test dependencies using `npm install typescript cypress`.  This will generate a `package.json` and a `package-lock.json`
+
+* Create a `tsconfig.json`
 ```json
 {
-  "pluginsFile": false,
-  "supportFile": false,
-  "fixturesFolder": false,
-  "baseUrl": "http://mattermost.mattermost.svc.cluster.local:8065",
-  "env": {
-    "mm_email": "test@bigbang.dev",
-    "mm_user": "bigbang",
-    "mm_password": "Bigbang#123"
-  }
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["es5", "dom"],
+    "types": ["cypress", "node"],
+    "baseUrl": "./",
+  },
+  "include": ["**/*.ts"]
 }
 ```
+* Add all `*.cy.ts` tests inside `chart/tests/cypress/e2e`. 
 
 Any cypress tests should be written following cypress best practices and functionally test the UI components of a package.
 
 Your final directory structure and files should look like this:
-
+## Directory Structure
 ```
-|-- chart
-|  |-- Chart.yaml (which includes the library dependency)
-|  |-- tests
-|  |  `-- cypress
-|  |    |-- cypress.json
-|  |    `-- *.spec.js
-|  `-- templates
-|     `-- tests
-|        `-- test.yaml (which uses the library templates)
-`-- tests
-   `-- test-values.yaml (with your bbtests values)
+.
+├── chart
+│   ├── Chart.yaml (which includes the library dependency)
+│   ├── templates
+│   │   └── tests
+│   │       └── test.yaml (which uses the library templates)
+│   └── tests
+│       ├── cypress
+│       │   └── e2e (contains your test spec files)
+│       │       └── test-health.cy.ts 
+│       ├── cypress.config.ts (cypress config)
+│       ├── package.json
+│       ├── package-lock.json
+│       └── tsconfig.json
+└── tests
+    └── test-values.yaml (with your bbtests values)
 ```
 
 ### Cypress exports

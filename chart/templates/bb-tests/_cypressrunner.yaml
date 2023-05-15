@@ -11,9 +11,9 @@ metadata:
     helm-test: enabled
 spec:
   securityContext:
-    runAsUser: 1000
-    runAsGroup: 1000
-    fsGroup: 1000
+    runAsUser: 1001
+    runAsGroup: 1001
+    fsGroup: 1001
   {{- if .Values.bbtests }}
   {{- if .Values.bbtests.cypress }}
   {{- if .Values.bbtests.cypress.exports }}
@@ -30,7 +30,7 @@ spec:
         readOnlyRootFilesystem: true
       {{- if .Values.bbtests }}
       {{- if .Values.bbtests.cypress }}
-      image: {{ .Values.bbtests.cypress.image | default "registry1.dso.mil/bigbang-ci/cypress-kubectl:9.7.0" }}
+      image: {{ .Values.bbtests.cypress.image | default "registry1.dso.mil/ironbank/cypress/included:12.9.0" }}
       {{- end }}
       {{- end }}
       imagePullPolicy: IfNotPresent
@@ -43,11 +43,15 @@ spec:
         export EXIT_CODE=0
         set -e
         if [[ -d /src && -n "$(ls /src/* 2>/dev/null)" ]]; then
-          cp /src/cypress.json /test/
-          mkdir -p /test/cypress/integration/
-          cp /src/*.js /test/cypress/integration/
+          unset CYPRESS_RUN_BINARY
+          export CYPRESS_CACHE_FOLDER=/test/.cache/Cypress
+          export npm_config_cache=/test/.cache/npm
+          mkdir -p /test/cypress/e2e
+          cp /src/* /test
+          mv /test/*.cy.ts /test/cypress/e2e
+          cd /test && npm ci
           mkdir -p exports
-          (cypress run --browser chrome --headless --spec "/test/cypress/integration/*[!plugins].js" && export EXIT_CODE=$?) || export EXIT_CODE=$?
+          (npx cypress run --browser chrome --headless && export EXIT_CODE=$?) || export EXIT_CODE=$?
           {{- if .Values.bbtests }}
           {{- if .Values.bbtests.cypress }}
           {{- if .Values.bbtests.cypress.exports }}
