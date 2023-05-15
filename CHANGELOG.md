@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 Note that changelog entries are only added when there are changes to the chart (docs changes do not require a new version/changelog entry).
 
 ---
+## [0.3.3]
+### Changed
+- Moved cypress image to new location in registry1
+
 ## [0.3.2]
 ### Changed
 - Moved cypress image to new location in registry1
