@@ -2,15 +2,15 @@
 
 Currently two testing types are supported through the
 library, scripts (for CLI testing - think bash, python, etc) and cypress (for UI testing). These two test types are
-described below along with examples of how to implement them. NOTE: If your package can be interacted via a UI and a CLI
-both test types should be included. By default UI tests run before CLI tests the way the library is written, but this
+described below along with examples of how to implement them. NOTE: If your package can be interacted with via a UI and a CLI
+both test types should be included. By default UI tests run before CLI tests due to the way the library is written, but this
 can be overridden as described below.
 
-Tests will automatically be run by the pipelines, but if you wish to run them locally you will need to install the
-package with the test values, then run `helm test {{HELMRELEASE_NAME}} -n {{HELMRELEASE_NAMESPACE}}` replacing the
+Pipelines will automatically run these tests, but if you wish to run them locally you will need to install the
+package with the test values, then run `helm test {{HELMRELEASE_NAME}} -n {{HELMRELEASE_NAMESPACE}}`, replacing the
 variables with the proper values for your package (you can check the helmrelease name and namespace with `helm ls -A`).
 
-You will need to include the `bbtests.enabled` toggle set to true in your test-values so that the tests are deployed.
+You will need to set the `bbtests.enabled` toggle to true in your test-values so that the tests are deployed.
 
 ```yaml
 bbtests:
@@ -19,7 +19,7 @@ bbtests:
 
 ## Cypress
 
-To include the Helm test templates for Cypress you will need to make a file under `chart/templates/tests` which includes
+To include the Helm test templates for Cypress you will need to create a file called test-ui.yaml under `chart/templates/tests` which includes
 the content below:
 
 ```yaml
@@ -47,8 +47,24 @@ metadata:
 {{- end }}
 ```
 
-The second step to implementing these tests will be including values in your `test-values.yaml` file that would be
-needed for the tests. There are several values you will want to consider, all values are optional:
+The second step to implementing these tests is to set the `bbtests.enabled` value in `/tests/test-values.yaml` to true:
+```
+networkPolicies:
+  enabled: true
+
+imagePullSecrets:
+  - name: private-registry
+
+console:
+  persistence:
+    size: 5Gi
+  localVolumeUpgrade: true
+
+bbtests:
+  enabled: true
+```
+
+Next, include values that would be needed for the tests in your `chart/values.yaml` file in the bbtest: section. There are several values you will want to consider (all values are optional):
 
 - `bbtests.cypress.artifacts`: This should be set to true in almost all cases so that artifacts are exported from the
 helm test pods and available as artifacts in the pipeline.
@@ -73,52 +89,26 @@ A sample is included below:
 
 ```yaml
 bbtests:
-  enabled: true
+  # -- Toggle bbtests on/off for CI/Dev
+  enabled: false
   cypress:
+    # -- Toggle creation of cypress artifacts
     artifacts: true
-    exports: true
-    additionalVolumeMounts:
-      - name: "{{ .Chart.Name }}-example"
-        mountPath: /example
-      - name: "{{ .Chart.Name }}-example-config"
-        mountPath: /otherexample
-        subpath: something
-    additionalVolumes:
-      - name: "{{ .Chart.Name }}-example"
-        emptyDir: {}
-      - name: "{{ .Chart.Name }}-example-config"
-        configMap:
-          name: "{{ .Chart.Name }}-example-config"
+    # -- Set envs for use in cypress tests
     envs:
-      HOST: "{{ .Values.service.port }}"
-      MINIO_HOST: '{{ include "minio.serviceName" . }}'
-      cypress_url: 'http://{{ include "minio.serviceName" . }}:{{ .Values.service.port }}'
-    secretEnvs:
-      - name: cypress_secretkey
-        valueFrom:
-          secretKeyRef:
-            name: "{{ .Values.minioRootCreds }}"
-            key: secretkey
-      - name: cypress_accesskey
-        valueFrom:
-          secretKeyRef:
-            name: "{{ .Values.minioRootCreds }}"
-            key: accesskey
-    resources:
-      requests:
-        cpu: "1"
-        memory: "1Gi"
-      limits:
-        cpu: "1"
-        memory: "1Gi"
-  istio:
-    hosts:
-      - "minio.{{ .Values.hostname }}"
+      cypress_baseUrl: "http://{{ .Release.Name }}-console.{{ .Release.Namespace }}.svc.cluster.local:8081"
+  scripts:
+    # -- Image to use for script tests
+    image: registry1.dso.mil/ironbank/stedolan/jq:1.6
+    # -- Set envs for use in script tests
+    envs:
+      twistlock_host: "https://{{ .Release.Name }}-console.{{ .Release.Namespace }}.svc.cluster.local:8083"
+      desired_version: "{{ .Values.console.image.tag }}"
 ```
 
-NOTE: ENVs must be prefixed with `cypress_` to be available to Cypress.
+NOTE: Environment variables must be prefixed with `cypress_` to be available to Cypress.
 
-To setup the package test directory `chart/tests`: 
+To set up the package test directory `chart/tests`: 
 
 * Create a `cypress.config.ts`
 ```typescript
@@ -137,9 +127,9 @@ export default defineConfig({
   },
 });
 ```
-* Install test dependencies using `npm install typescript cypress`.  This will generate a `package.json` and a `package-lock.json`
+* Install test dependencies using `npm install typescript cypress`.  This will generate a `package.json` and a `package-lock.json` in the `/chart/tests` folder. 
 
-* Create a `tsconfig.json`
+* Create a `tsconfig.json`, also in the `/chart/tests` folder. 
 ```json
 {
   "compilerOptions": {
@@ -151,9 +141,9 @@ export default defineConfig({
   "include": ["**/*.ts"]
 }
 ```
-* Add all `*.cy.ts` tests inside `chart/tests/cypress/e2e`. 
+* Add all `*.cy.ts` tests to the `chart/tests/cypress/e2e` folder.  
 
-Any cypress tests should be written following cypress best practices and functionally test the UI components of a package.
+Any cypress tests should be written following cypress best practices and functionally to test the UI components of a package.
 
 Your final directory structure and files should look like this:
 ## Directory Structure
@@ -173,7 +163,7 @@ Your final directory structure and files should look like this:
 │       ├── package-lock.json
 │       └── tsconfig.json
 └── tests
-    └── test-values.yaml (with your bbtests values)
+    └── test-values.yaml (where you enable bbtests)
 ```
 
 ### Cypress exports
@@ -185,7 +175,7 @@ cy.writeFile('exports/envs-from-cypress.env', 'export MY_TOKEN=', { flag: 'a+' }
 cy.get('input[id="token"]').invoke('val').then(token => cy.writeFile('exports/envs-from-cypress.env', token + '\n', { flag: 'a+' }))
 ```
 
-These files will be available in any scripts you run at the same file structure (under the subdirectory exports). Note that nothing is done with the files, so it is up to your script on how you would like to extract and use the files. The example above shows writing out an `export` "command" so that the file can be easily sourced, but you could write out a yaml or json file to parse instead (or any other thing you want to do with the file).
+These files will be available in any scripts you run at the same file structure (under the subdirectory exports). Note that nothing is done with the files, so your script determines how you extract and use the files. The example above shows writing out an `export` "command" so that the file can be easily sourced, but you could write out a yaml or json file to parse instead (or any other thing you want to do with the file).
 
 ### Cypress artifacts
 
@@ -328,9 +318,9 @@ Your final directory structure and files should look like this:
 |  |    `-- mytest.sh
 |  `-- templates
 |     `-- tests
-|        `-- test.yaml (which uses the library templates)
+|        `-- test-ui.yaml (which uses the library templates)
 `-- tests
-   `-- test-values.yaml (with your bbtests values)
+   `-- test-values.yaml (where you enable bbtests)
 ```
 
 #  Add Gatekeeper exceptions
