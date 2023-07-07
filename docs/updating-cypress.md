@@ -1,12 +1,12 @@
 # From Cypress 9 to 12
 See https://docs.cypress.io/guides/references/migration-guide
 
-The major change between Cypress 9 and 12 is the new [directory structure](./bb-tests#directory-structure). 
+The major change between Cypress 9 and 12 is the new [directory structure](https://repo1.dso.mil/big-bang/product/packages/gluon/-/blob/master/docs/bb-tests.md#directory-structure).
 
 The highlights are: 
-* Spec files are now located in `chart/tests/cypress/e2e/` with the pattern `*.cy.ts`
-* The configuration file changed from `cypress.json` to `cypress.config.ts`
-* We are strongly encouraging use of Typescript so there are three additional files (`package-lock.json`, `package.json`, `tsconfig.json`)
+* Spec files are now located in the package repo in `chart/tests/cypress/e2e/` with the pattern `*.cy.ts`
+* The configuration file changed from `cypress.json` to `cypress.config.ts`. It should be located in the `/chart/tests` folder. 
+* We are strongly encouraging use of Typescript so there are three additional files: `package-lock.json`, `package.json`, and `tsconfig.json`. These should also be located in `/chart/tests`. 
 
 ## To migrate:
 ```bash
@@ -21,7 +21,7 @@ mv my-other-health.spec.js cypress/e2e/my-other-health.cy.ts
 npm install typescript cypress
 
 # ignore node_modules 
-echo node_modules > .gitignore
+echo node_modules >> .gitignore
 
 touch cypress.config.ts
 touch tsconfig.ts
