@@ -4,15 +4,15 @@ Depends on having Node/NPM installed.  The directory structure reflected in `cha
 tests
 ├── cypress
 │   └── e2e
-│       └── neuvector-health.cy.ts
-├── cypress.config.ts
+│       └── neuvector-health.cy.js
+├── cypress.config.js
 ├── package.json
 ├── package-lock.json
 ├── README.md
 └── tsconfig.json
 ```
 
-The configuration in `chart/tests/cypress.config.ts` sets the default environment variables. In this example, a base url is set.  
+The configuration in `chart/tests/cypress.config.js` sets the default environment variables. In this example, a base url is set.  
 ```json
 env: {
     url: "https://neuvector.bigbang.dev"

@@ -4,8 +4,8 @@ See https://docs.cypress.io/guides/references/migration-guide
 The major change between Cypress 9 and 12 is the new [directory structure](https://repo1.dso.mil/big-bang/product/packages/gluon/-/blob/master/docs/bb-tests.md#directory-structure).
 
 The highlights are: 
-* Spec files are now located in the package repo in `chart/tests/cypress/e2e/` with the pattern `*.cy.ts`
-* The configuration file changed from `cypress.json` to `cypress.config.ts`. It should be located in the `/chart/tests` folder. 
+* Spec files are now located in the package repo in `chart/tests/cypress/e2e/` with the pattern `*.cy.js`
+* The configuration file changed from `cypress.json` to `cypress.config.js`. It should be located in the `/chart/tests` folder. 
 * We are strongly encouraging use of Typescript so there are three additional files: `package-lock.json`, `package.json`, and `tsconfig.json`. These should also be located in `/chart/tests`. 
 
 ## To migrate:
@@ -14,48 +14,37 @@ The highlights are:
 mkdir -p cypress/e2e
 
 # move tests
-mv my-health.spec.js cypress/e2e/my-health.cy.ts
-mv my-other-health.spec.js cypress/e2e/my-other-health.cy.ts
+mv my-health.spec.js cypress/e2e/my-health.cy.js
+mv my-other-health.spec.js cypress/e2e/my-other-health.cy.js
 
 # install dependencies
-npm install typescript cypress
+npm install cypress
 
 # ignore node_modules 
 echo node_modules >> .gitignore
 
-touch cypress.config.ts
-touch tsconfig.ts
+touch cypress.config.js
+touch tsconfig.js
 ```
 
-For the `cypress.config.ts` you can use this as a starting point: 
+For the `cypress.config.js` you can use this as a starting point: 
 
 ```typescript
-import { defineConfig } from "cypress";
+const { defineConfig } = require('cypress')
 
-export default defineConfig({
+module.exports = defineConfig({
   e2e: {
     env: {
-      url: "https://some.bigbang.dev"
+      baseUrl: "https://keycloak.bigbang.dev"
     },
+    video: true,
+    screenshot: true,
     supportFile: false,
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },
   },
-});
-```
-
-Likewise for the `tsconfig.json`
-```json
-{
-  "compilerOptions": {
-    "target": "es5",
-    "lib": ["es5", "dom"],
-    "types": ["cypress", "node"],
-    "baseUrl": "./",
-  },
-  "include": ["**/*.ts"]
-}
+})
 ```
 
 To test you can run `npx cypress run --browser chrome --headless` or run interactively with `npx cypress open` 

@@ -110,38 +110,27 @@ NOTE: Environment variables must be prefixed with `cypress_` to be available to 
 
 To set up the package test directory `chart/tests`: 
 
-* Create a `cypress.config.ts`
+* Create a `cypress.config.js`
 ```typescript
-import { defineConfig } from "cypress";
+const { defineConfig } = require('cypress')
 
-export default defineConfig({
+module.exports = defineConfig({
   e2e: {
-    videoCompression: false,
     env: {
-      url: "https://neuvector.bigbang.dev"
+      baseUrl: "https://keycloak.bigbang.dev"
     },
+    video: true,
+    screenshot: true,
     supportFile: false,
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },
   },
-});
+})
 ```
-* Install test dependencies using `npm install typescript cypress`.  This will generate a `package.json` and a `package-lock.json` in the `/chart/tests` folder. 
+* Install test dependencies using `npm install cypress`.  This will generate a `package.json` and a `package-lock.json` in the `/chart/tests` folder. 
 
-* Create a `tsconfig.json`, also in the `/chart/tests` folder. 
-```json
-{
-  "compilerOptions": {
-    "target": "es5",
-    "lib": ["es5", "dom"],
-    "types": ["cypress", "node"],
-    "baseUrl": "./",
-  },
-  "include": ["**/*.ts"]
-}
-```
-* Add all `*.cy.ts` tests to the `chart/tests/cypress/e2e` folder.  
+* Add all `*.cy.js` tests to the `chart/tests/cypress/e2e` folder.  
 
 Any cypress tests should be written following cypress best practices and functionally to test the UI components of a package.
 
@@ -156,9 +145,11 @@ Your final directory structure and files should look like this:
 │   │       └── test.yaml (which uses the library templates)
 │   └── tests
 │       ├── cypress
-│       │   └── e2e (contains your test spec files)
-│       │       └── test-health.cy.ts 
-│       ├── cypress.config.ts (cypress config)
+│       │   ├── videos (contains your test video files)
+│       │   ├── screenshots (contains your test screenshots files)
+│       │   ├── e2e (contains your test spec files)
+│       │       └── test-health.cy.js 
+│       ├── cypress.config.js (cypress config)
 │       ├── package.json
 │       ├── package-lock.json
 │       └── tsconfig.json
