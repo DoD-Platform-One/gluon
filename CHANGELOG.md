@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 Note that changelog entries are only added when there are changes to the chart (docs changes do not require a new version/changelog entry).
 
 ---
+## [0.4.2]
+### Changed
+- Added optional flag bbtests.cypress.enabled to disable cypress tests, defaults to enabled
+
 ## [0.4.1]
 ### Changed
 - Reverted current default image and ensured that js is the path forward
