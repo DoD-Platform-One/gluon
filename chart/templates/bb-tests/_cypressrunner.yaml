@@ -1,4 +1,5 @@
 {{- define "gluon.tests.cypress-runner.tpl" }}
+{{- if ne false ((.Values.bbtests).cypress).enabled }}
 kind: Pod
 apiVersion: v1
 metadata:
@@ -160,6 +161,7 @@ spec:
     {{- end }}
   imagePullSecrets:
     - name: private-registry
+{{- end }}
 {{- end }}
 
 {{- define "gluon.tests.cypress-runner.base" }}
