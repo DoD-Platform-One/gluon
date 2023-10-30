@@ -8,6 +8,27 @@ metadata:
   annotations:
     "helm.sh/hook": test-success
     "helm.sh/hook-weight": "5"
+    {{- /*
+      Defaults: https://github.com/istio/istio/blob/master/manifests/charts/istio-control/istio-discovery/values.yaml#L362-L369 
+    */}}
+    {{- with .Values.bbtests.istio.sidecar.resources }}
+    {{- if .cpu }}
+    {{- if .cpu.requests }}
+    "sidecar.istio.io/proxyCPU": {{ .cpu.requests | quote }} # Default: 100m
+    {{- end }}
+    {{- if .cpu.limits }}
+    "sidecar.istio.io/proxyCPULimit": {{.cpu.limits | quote }} # Default: 2000m
+    {{- end }}
+    {{- end }}
+    {{- if .memory }}
+    {{- if .memory.requests }}
+    "sidecar.istio.io/proxyMemory": {{ .memory.requests | quote }} # Default: 128mi
+    {{- end }}
+    {{- if .memory.limits }}
+    "sidecar.istio.io/proxyMemoryLimit": {{ .memory.limits | quote }} # Default: 1024mi
+    {{- end }}
+    {{- end }}
+    {{- end }}
   labels:
     helm-test: enabled
 spec:
