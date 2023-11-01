@@ -11,7 +11,7 @@ metadata:
     {{- /*
       Defaults: https://github.com/istio/istio/blob/master/manifests/charts/istio-control/istio-discovery/values.yaml#L362-L369 
     */}}
-    {{- with .Values.bbtests.istio.sidecar.resources }}
+    {{- with ((.Values.bbtests.istio).sidecar).resources }}
     {{- if .cpu }}
     {{- if .cpu.requests }}
     "sidecar.istio.io/proxyCPU": {{ .cpu.requests | quote }} # Default: 100m
