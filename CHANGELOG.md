@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 Note that changelog entries are only added when there are changes to the chart (docs changes do not require a new version/changelog entry).
 
 ---
+## [0.4.5]
+### Fixed
+- Fixed bug where pod resources were not setting limits. It was using requets values for both requests and limites.
+
 ## [0.4.4]
 ### Fixed
 - Fixed bug where istio sidecar resources were not optional
