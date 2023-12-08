@@ -145,8 +145,8 @@ spec:
           cpu: {{ .Values.bbtests.cypress.resources.requests.cpu | quote }}
           memory: {{ .Values.bbtests.cypress.resources.requests.memory | quote }}
         limits:
-          cpu: {{ .Values.bbtests.cypress.resources.requests.cpu | quote }}
-          memory: {{ .Values.bbtests.cypress.resources.requests.memory | quote }}
+          cpu: {{ .Values.bbtests.cypress.resources.limits.cpu | quote }}
+          memory: {{ .Values.bbtests.cypress.resources.limits.memory | quote }}
       {{- else }}
         requests:
           cpu: "1"

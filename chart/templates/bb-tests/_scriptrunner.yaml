@@ -112,8 +112,8 @@ spec:
           cpu: {{ .Values.bbtests.scripts.resources.requests.cpu | quote }}
           memory: {{ .Values.bbtests.scripts.resources.requests.memory | quote }}
         limits:
-          cpu: {{ .Values.bbtests.scripts.resources.requests.cpu | quote }}
-          memory: {{ .Values.bbtests.scripts.resources.requests.memory | quote }}
+          cpu: {{ .Values.bbtests.scripts.resources.limits.cpu | quote }}
+          memory: {{ .Values.bbtests.scripts.resources.limits.memory | quote }}
       {{- else }}
         requests:
           cpu: "1"
