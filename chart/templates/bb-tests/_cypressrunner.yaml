@@ -82,8 +82,8 @@ spec:
           wget -P /test/cypress/support https://repo1.dso.mil/big-bang/product/packages/gluon/-/raw/1873-extend-testing/common/index.js
           wget -P /test/cypress/support https://repo1.dso.mil/big-bang/product/packages/gluon/-/raw/1873-extend-testing/common/commands.js
           wget -P /test/ https://repo1.dso.mil/big-bang/product/packages/gluon/-/raw/1873-extend-testing/common/cypress.config.js
-          if [ -d /custom ];
-            mv /custom/*.cy.js /test/cypress/e2e 
+          if [[ -d /custom ]]; then
+            cp /custom/*.cy.js /test/cypress/e2e 
           fi
           cd /test && npm ci
           mkdir -p exports
