@@ -76,8 +76,15 @@ spec:
           export CYPRESS_CACHE_FOLDER=/test/.cache/Cypress
           export npm_config_cache=/test/.cache/npm
           mkdir -p /test/cypress/e2e
+          mkdir -p /test/cypress/support
           cp /src/* /test
           mv /test/*.cy.js /test/cypress/e2e
+          wget -P /test/cypress/support https://repo1.dso.mil/big-bang/product/packages/gluon/-/raw/1873-extend-testing/common/index.js
+          wget -P /test/cypress/support https://repo1.dso.mil/big-bang/product/packages/gluon/-/raw/1873-extend-testing/common/commands.js
+          wget -P /test/ https://repo1.dso.mil/big-bang/product/packages/gluon/-/raw/1873-extend-testing/common/cypress.config.js
+          if [ -d /custom ];
+            mv /custom/*.cy.js /test/cypress/e2e 
+          fi
           cd /test && npm ci
           mkdir -p exports
           (npx cypress run --browser chrome --headless && export EXIT_CODE=$?) || export EXIT_CODE=$?
@@ -115,6 +122,10 @@ spec:
           mountPath: /test
         - name: tmpdir
           mountPath: /tmp
+        {{- if .Values.bbtests.cypress.customTest}}
+        - name: custom-test
+          mountPath: /custom
+        {{- end}}
         {{- if .Values.bbtests }}
         {{- if .Values.bbtests.cypress }}
         {{- if .Values.bbtests.cypress.artifacts }}
@@ -157,10 +168,10 @@ spec:
       {{- else }}
         requests:
           cpu: "1"
-          memory: "1Gi"
+          memory: "2Gi"
         limits:
           cpu: "1"
-          memory: "1Gi"
+          memory: "2Gi"
       {{- end }}
   restartPolicy: Never
   volumes:
@@ -171,6 +182,11 @@ spec:
       emptyDir: {}
     - name: tmpdir
       emptyDir: {}
+    {{- if .Values.bbtests.cypress.customTest }}
+    - name: custom-test
+      configMap:
+        name: "{{ .Values.bbtests.cypress.customTest }}"
+    {{- end}}
     {{- if .Values.bbtests }}
     {{- if .Values.bbtests.cypress }}
     {{- if .Values.bbtests.cypress.artifacts }}
