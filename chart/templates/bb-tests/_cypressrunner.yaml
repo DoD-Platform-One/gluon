@@ -78,10 +78,14 @@ spec:
           mkdir -p /test/cypress/e2e
           mkdir -p /test/cypress/support
           cp /src/* /test
-          mv /test/*.cy.js /test/cypress/e2e
-          wget -P /test/cypress/support https://repo1.dso.mil/big-bang/product/packages/gluon/-/raw/1873-extend-testing/common/index.js
-          wget -P /test/cypress/support https://repo1.dso.mil/big-bang/product/packages/gluon/-/raw/1873-extend-testing/common/commands.js
-          wget -P /test/ https://repo1.dso.mil/big-bang/product/packages/gluon/-/raw/1873-extend-testing/common/cypress.config.js
+          {{- if .Values.bbtests.cypress.disableDefaultTests }}
+            echo "Default tests have been disabled"
+          {{- else }}
+            mv /test/*.cy.js /test/cypress/e2e
+          {{- end }}
+          wget -P /test/cypress/support https://repo1.dso.mil/big-bang/product/packages/gluon/-/raw/master/common/index.js
+          wget -P /test/cypress/support https://repo1.dso.mil/big-bang/product/packages/gluon/-/raw/master/common/commands.js
+          wget -P /test/ https://repo1.dso.mil/big-bang/product/packages/gluon/-/raw/master/common/cypress.config.js
           if [[ -d /custom ]]; then
             cp /custom/*.cy.js /test/cypress/e2e 
           fi

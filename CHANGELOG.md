@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 Note that changelog entries are only added when there are changes to the chart (docs changes do not require a new version/changelog entry).
 
 ---
+## [0.4.8]
+### Added
+- Added ability to disable bb provided cypress tests so users can run only their own provided tests
+- Finalized shared commands
+
 ## [0.4.7]
 ### Added
 - Shared commands and Cypress config to reduce code duplication across package tests
