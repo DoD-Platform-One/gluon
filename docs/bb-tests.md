@@ -110,24 +110,6 @@ NOTE: Environment variables must be prefixed with `cypress_` to be available to 
 
 To set up the package test directory `chart/tests`: 
 
-* Create a `cypress.config.js`
-```typescript
-const { defineConfig } = require('cypress')
-
-module.exports = defineConfig({
-  e2e: {
-    env: {
-      baseUrl: "https://keycloak.bigbang.dev"
-    },
-    video: true,
-    screenshot: true,
-    supportFile: false,
-    setupNodeEvents(on, config) {
-      // implement node event listeners here
-    },
-  },
-})
-```
 * Install test dependencies using `npm install cypress`.  This will generate a `package.json` and a `package-lock.json` in the `/chart/tests` folder. 
 
 * Add all `*.cy.js` tests to the `chart/tests/cypress/e2e` folder.  
@@ -149,10 +131,8 @@ Your final directory structure and files should look like this:
 │       │   ├── screenshots (contains your test screenshots files)
 │       │   ├── e2e (contains your test spec files)
 │       │       └── test-health.cy.js 
-│       ├── cypress.config.js (cypress config)
 │       ├── package.json
 │       ├── package-lock.json
-│       └── tsconfig.json
 └── tests
     └── test-values.yaml (where you enable bbtests)
 ```
