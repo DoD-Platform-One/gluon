@@ -171,11 +171,11 @@ spec:
           memory: {{ .Values.bbtests.cypress.resources.limits.memory | quote }}
       {{- else }}
         requests:
-          cpu: "1"
-          memory: "2Gi"
+          cpu: "2"
+          memory: "4Gi"
         limits:
-          cpu: "1"
-          memory: "2Gi"
+          cpu: "2"
+          memory: "4Gi"
       {{- end }}
   restartPolicy: Never
   volumes:
