@@ -1,0 +1,45 @@
+# Basic Helm Chart used to test Cypress in Pipeline
+
+replicaCount: 1
+
+image:
+  repository: "registry1.dso.mil/bigbang-ci/cypress-kubectl"
+  pullPolicy: Always
+  tag: ""
+
+imagePullSecrets:
+  - name: private-registry
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 80
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 2048Mi
+  requests:
+    cpu: 100m
+    memory: 1024Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+bbtests:
+  enabled: true
+  scripts:
+    image: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.28.7
+  cypress:
+    artifacts: true
+    disableDefaultTests: false
