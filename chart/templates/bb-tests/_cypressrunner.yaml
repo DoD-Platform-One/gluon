@@ -50,13 +50,6 @@ spec:
           drop:
           - ALL
         readOnlyRootFilesystem: true
-        {{- if .Values.bbtests }}
-        {{- if .Values.bbtests.cypress }}
-        {{- if .Values.bbtests.cypress.openshift }}
-        privileged: true 
-        {{- end }}
-        {{- end }}
-        {{- end }}
       {{- if .Values.bbtests }}
       {{- if .Values.bbtests.cypress }}
       image: {{ .Values.bbtests.cypress.image | default "registry1.dso.mil/bigbang-ci/cypress-kubectl:9.7.0" }}
@@ -194,11 +187,13 @@ spec:
     {{- if .Values.bbtests }}
     {{- if .Values.bbtests.cypress }}
     {{- if .Values.bbtests.cypress.artifacts }}
+     {{- if and .Values.bbtests.cypress.persistence  .Values.bbtests.cypress.persistence.enabled  }}
+    - name: cypress-artifacts
+      persistentVolumeClaim:
+        claimName: "{{ .Chart.Name }}-cypress-pvc"
+      {{- else }}
     - name: cypress-artifacts
       hostPath:
-      {{- if .Values.bbtests.cypress.openshift }}
-        path: /mnt/cypress
-      {{- else }}
         path: "/cypress" 
       {{- end }}
     {{- end }}
@@ -241,8 +236,11 @@ spec:
 {{- include "gluon.tests.cypress-rbac" $values }}
 ---
 {{- end }}
+
 {{- end }}
 {{- include "gluon.util.merge" (append . "gluon.tests.cypress-runner.tpl") }}
+{{- include "gluon.tests.cypress-pvc.tpl" $values }}
+
 {{- end }}
 {{- end }}
 {{- end }}

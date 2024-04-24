@@ -1,0 +1,54 @@
+{{- define "gluon.tests.cypress-pvc.tpl" }}
+{{- if .Values.bbtests }}
+{{- if .Values.bbtests.enabled }}
+{{- if .Values.bbtests.cypress }}
+{{- if .Values.bbtests.cypress.artifacts }}
+{{- if .Values.bbtests.cypress.persistence }}
+{{- if .Values.bbtests.cypress.persistence.enabled }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: "{{ .Chart.Name }}-cypress-pvc"
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    "helm.sh/hook": test-success
+    "helm.sh/hook-weight": "-5"
+    sidecar.istio.io/inject: "false"
+  labels:
+    helm-test: enabled
+spec:
+  {{- if .Values.bbtests.cypress.persistence.storageClassName }}
+  storageClassName: {{ .Values.bbtests.cypress.persistence.storageClassName }}
+  {{- end }}
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.bbtests.cypress.persistence.storageSize }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{- define "gluon.tests.cypress-pvc.overrides" }}
+{{- $values := (first .) }}
+{{- if $values.Values.bbtests }}
+{{- if $values.Values.bbtests.enabled }}
+{{- if $values.Values.bbtests.cypress }}
+{{- if $values.Values.bbtests.cypress.artifacts }}
+{{- if $values.Values.bbtests.cypress.persistence }}
+{{- if $values.Values.bbtests.cypress.persistence.enabled }}
+---
+{{- include "gluon.util.merge" (append . "gluon.tests.cypress-pvc.tpl") }}
+
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
