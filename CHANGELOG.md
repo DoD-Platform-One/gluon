@@ -6,6 +6,10 @@ Note that changelog entries are only added when there are changes to the chart (
 
 
 ---
+## [0.5.0]
+### Changed
+- Updated default image, updated necessary logic in cypressrunner, and removed logic that is now already done in container
+
 ## [0.4.10]
 ### Added
 - Store cypres test result in persistent volume 

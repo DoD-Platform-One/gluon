@@ -13,7 +13,6 @@ metadata:
     helm-test: enabled
   namespace: {{ .Release.Namespace }}
 data:
-  {{ (.Files.Glob "tests/*").AsConfig | nindent 2 }}
   {{ (.Files.Glob "tests/cypress/e2e/*").AsConfig | nindent 2 }}
 {{- end }}
 {{- end }}

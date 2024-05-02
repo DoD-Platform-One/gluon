@@ -41,5 +41,5 @@ bbtests:
   scripts:
     image: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.28.7
   cypress:
-    artifacts: true
+    artifacts: false
     disableDefaultTests: false
