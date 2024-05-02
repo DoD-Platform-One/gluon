@@ -52,11 +52,10 @@ spec:
         readOnlyRootFilesystem: true
       {{- if .Values.bbtests }}
       {{- if .Values.bbtests.cypress }}
-      image: {{ .Values.bbtests.cypress.image | default "registry1.dso.mil/bigbang-ci/cypress-kubectl:9.7.0" }}
+      image: {{ .Values.bbtests.cypress.image | default "registry1.dso.mil/bigbang-ci/cypress-kubectl:13.8.1" }}
       {{- end }}
       {{- end }}
       imagePullPolicy: IfNotPresent
-      workingDir: /test
       command:
       - "/bin/bash"
       - "-c"
@@ -64,26 +63,16 @@ spec:
         trap 'curl -s -X POST http://localhost:15000/quitquitquit || true' ERR
         export EXIT_CODE=0
         set -e
-        if [[ -d /src && -n "$(ls /src/* 2>/dev/null)" ]]; then
-          unset CYPRESS_RUN_BINARY
-          export CYPRESS_CACHE_FOLDER=/test/.cache/Cypress
-          export npm_config_cache=/test/.cache/npm
-          mkdir -p /test/cypress/e2e
-          mkdir -p /test/cypress/support
-          cp /src/* /test
-          {{- if .Values.bbtests.cypress.disableDefaultTests }}
-            echo "Default tests have been disabled"
-          {{- else }}
-            mv /test/*.cy.js /test/cypress/e2e
-          {{- end }}
-          wget -P /test/cypress/support https://repo1.dso.mil/big-bang/product/packages/gluon/-/raw/master/common/index.js
-          wget -P /test/cypress/support https://repo1.dso.mil/big-bang/product/packages/gluon/-/raw/master/common/commands.js
-          wget -P /test/ https://repo1.dso.mil/big-bang/product/packages/gluon/-/raw/master/common/cypress.config.js
-          if [[ -d /custom ]]; then
-            cp /custom/*.cy.js /test/cypress/e2e 
-          fi
-          cd /test && npm ci
-          mkdir -p exports
+        {{- if .Values.bbtests.cypress.disableDefaultTests }}
+          echo "Default tests have been disabled"
+        {{- else }}
+          cp /src/*.cy.js /test/cypress/e2e
+        {{- end }}
+        if [[ -d /custom ]]; then
+          cp /custom/*.cy.js /test/cypress/e2e 
+        fi
+        if [[ -d /test/cypress/e2e && -n "$(ls /test/cypress/e2e/*.cy.js 2>/dev/null)" ]]; then
+          wget -P /test/cypress/common https://repo1.dso.mil/big-bang/product/packages/gluon/-/raw/master/common/commands.js
           (npx cypress run --browser chrome --headless && export EXIT_CODE=$?) || export EXIT_CODE=$?
           {{- if .Values.bbtests }}
           {{- if .Values.bbtests.cypress }}
@@ -113,12 +102,20 @@ spec:
         curl -s -X POST http://localhost:15000/quitquitquit || true
         exit ${EXIT_CODE}
       volumeMounts:
+        - name: commondir
+          mountPath: /test/cypress/common
+        - name: testdir
+          mountPath: /test/cypress/e2e
         - name: cypress-tests
           mountPath: /src
-        - name: workdir
-          mountPath: /test
         - name: tmpdir
           mountPath: /tmp
+        - name: videos
+          mountPath: /test/cypress/videos
+        - name: screenshots
+          mountPath: /test/cypress/screenshots
+        - name: logs
+          mountPath: /home/node/.npm
         {{- if .Values.bbtests.cypress.customTest}}
         - name: custom-test
           mountPath: /custom
@@ -175,9 +172,17 @@ spec:
     - name: cypress-tests
       configMap:
         name: "{{ .Chart.Name }}-cypress-config"
-    - name: workdir
-      emptyDir: {}
     - name: tmpdir
+      emptyDir: {}
+    - name: commondir
+      emptyDir: {}
+    - name: testdir
+      emptyDir: {}
+    - name: videos
+      emptyDir: {}
+    - name: screenshots
+      emptyDir: {}
+    - name: logs
       emptyDir: {}
     {{- if .Values.bbtests.cypress.customTest }}
     - name: custom-test
