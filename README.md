@@ -5,6 +5,7 @@
 A Helm chart for Kubernetes
 
 ## Learn More
+
 * [Application Overview](docs/overview.md)
 * [Other Documentation](docs/)
 
@@ -16,12 +17,13 @@ A Helm chart for Kubernetes
 
 Install Helm
 
-https://helm.sh/docs/intro/install/
+<https://helm.sh/docs/intro/install/>
 
 ## Deployment
 
 * Clone down the repository
 * cd into directory
+
 ```bash
 helm install validate-chart chart/
 ```
