@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 Note that changelog entries are only added when there are changes to the chart (docs changes do not require a new version/changelog entry).
 
 ---
+## [0.5.1]
+
+### Changed
+
+- Bumps `helm-docs` image version recommendation from `1.10.0` to `1.14.2`.
+- Updated README generation templates under `./docs` to always include an `Upstream Release Notes` section as a part of [renovate-runner#30](https://repo1.dso.mil/big-bang/pipeline-templates/renovate-runner/-/issues/30) under the [automate renovate ticket workflow](https://repo1.dso.mil/groups/big-bang/-/epics/330) epic.
 
 ## [0.5.0]
 
