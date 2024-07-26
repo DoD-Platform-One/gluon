@@ -1,0 +1,32 @@
+{{- define "gluon.wait.wait-job-configmap.base" }}
+{{- if .Values.waitJob }}
+{{- if and .Values.waitJob.scripts .Values.waitJob.enabled }}
+{{- if .Values.waitJob.scripts.image }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ .Chart.Name }}-wait-script"
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade #todo update hooks
+    "helm.sh/hook-weight": "-5" #todo update weight
+    sidecar.istio.io/inject: "false"
+  labels:
+    wait-job: enabled
+  namespace: {{ .Release.Namespace }}
+data:
+  {{ (.Files.Glob "wait/*").AsConfig | nindent 2 }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{- define "gluon.wait.wait-job-configmap.overrides" }}
+{{- $values := (first .) }}
+{{- if $values.Values.waitJob }}
+{{- if and $values.Values.waitJob.scripts $values.Values.waitJob.enabled }}
+{{- if $values.Values.waitJob.scripts.image }}
+{{- include "gluon.util.merge" (append . "gluon.wait.wait-job-configmap.base") }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
