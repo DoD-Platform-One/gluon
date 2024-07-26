@@ -5,8 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 Note that changelog entries are only added when there are changes to the chart (docs changes do not require a new version/changelog entry).
 
 ---
-## [0.5.1]
+## [0.5.2]
+### Added
+- Added post-install hook to execute wait script for running pipelines 
 
+## [0.5.1]
 ### Changed
 
 - Bumps `helm-docs` image version recommendation from `1.10.0` to `1.14.2`.

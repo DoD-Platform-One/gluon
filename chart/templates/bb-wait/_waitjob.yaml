@@ -1,0 +1,181 @@
+{{ define "gluon.wait.wait-job-sa.base" -}}
+{{- if .Values.waitJob }}
+{{- if and .Values.waitJob.scripts .Values.waitJob.enabled }}
+{{- if .Values.waitJob.scripts.image }}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: "{{ .Chart.Name }}-wait-script"
+  namespace: {{ .Release.Namespace }}
+automountServiceAccountToken: true
+---
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{ define "gluon.wait.wait-job-role.base" -}}
+{{- if .Values.waitJob }}
+{{- if and .Values.waitJob.scripts .Values.waitJob.enabled }}
+{{- if .Values.waitJob.scripts.image }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: "{{ .Chart.Name }}-wait-script"
+  namespace: {{ .Release.Namespace }}
+rules:
+- apiGroups:
+  {{- with .Values.waitJob.permissions.apiGroups | default (list "") }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  resources:
+  {{- with .Values.waitJob.permissions.resources | default (list "pods") }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  verbs: ["get", "list", "watch"]
+---
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{ define "gluon.wait.wait-job-rolebinding.base" -}}
+{{- if .Values.waitJob }}
+{{- if and .Values.waitJob.scripts .Values.waitJob.enabled }}
+{{- if .Values.waitJob.scripts.image }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: "{{ .Chart.Name }}-wait-script"
+  namespace: {{ .Release.Namespace }}
+subjects:
+- kind: ServiceAccount
+  name: wait-job
+  namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: Role
+  name: wait-job-role
+  apiGroup: rbac.authorization.k8s.io
+---
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{ define "gluon.wait.wait-job.base" -}}
+{{- if .Values.waitJob }}
+{{- if and .Values.waitJob.scripts .Values.waitJob.enabled }}
+{{- if .Values.waitJob.scripts.image }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: "{{ .Chart.Name }}-wait-script"
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "10000"
+    "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation, hook-failed
+spec:
+  template:
+    metadata:
+    spec: 
+      serviceAccountName: "{{ .Chart.Name }}-wait-script"
+      restartPolicy: Never
+      containers:
+      - name: wait-job
+        image: {{ tpl .Values.waitJob.scripts.image $ }}
+        imagePullPolicy: IfNotPresent
+        workingDir: /wait
+        command:
+        - "/bin/bash"
+        - "-c"
+        - |
+          if [[ -d /src && -n "$(ls /src/* 2>/dev/null)" ]]; then
+            cp /src/* /wait/
+          fi        
+          if [[ -n "$(ls . 2>/dev/null)" ]]; then
+            for script in *; do
+              if [[ -d ${script} ]]; then
+                continue;
+              fi
+              chmod +x ${script}
+              echo "---"
+              echo "Running ${script}..."
+              echo "---"
+              ./${script}
+            done
+          fi          
+        resources:
+          limits:
+            cpu: 0.5
+            memory: 128Mi
+          requests:
+            cpu: 0.5
+            memory: 128Mi
+        securityContext:
+          capabilities:
+            drop: ["ALL"]
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1000
+          runAsGroup: 1000 
+        volumeMounts:
+          - name: workdir
+            mountPath: /wait   
+          - name: wait-scripts
+            mountPath: /src
+      volumes:
+      - name: workdir
+        emptyDir: {}  
+      - name: wait-scripts
+        configMap:
+          name: "{{ .Chart.Name }}-wait-script"               
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{- define "gluon.wait.wait-job.overrides" -}}
+{{- $values := (first .) }}
+{{- if $values.Values.waitJob }}
+{{- if and $values.Values.waitJob.scripts $values.Values.waitJob.enabled }}
+{{- if $values.Values.waitJob.scripts.image }}
+{{- include "gluon.util.merge" (append . "gluon.wait.wait-job.base") -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "gluon.wait.wait-job-sa.overrides" -}}
+{{- $values := (first .) }}
+{{- if $values.Values.waitJob }}
+{{- if and $values.Values.waitJob.scripts $values.Values.waitJob.enabled }}
+{{- if $values.Values.waitJob.scripts.image }}
+{{- include "gluon.util.merge" (append . "gluon.wait.wait-job-sa.base") -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+
+{{- define "gluon.wait.wait-job-role.overrides" -}}
+{{- $values := (first .) }}
+{{- if $values.Values.waitJob }}
+{{- if and $values.Values.waitJob.scripts $values.Values.waitJob.enabled }}
+{{- if $values.Values.waitJob.scripts.image }}
+{{- include "gluon.util.merge" (append . "gluon.wait.wait-job-role.base") -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "gluon.wait.wait-job-rolebinding.overrides" -}}
+{{- $values := (first .) }}
+{{- if $values.Values.waitJob }}
+{{- if and $values.Values.waitJob.scripts $values.Values.waitJob.enabled }}
+{{- if $values.Values.waitJob.scripts.image }}
+{{- include "gluon.util.merge" (append . "gluon.wait.wait-job-rolebinding.base") -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
