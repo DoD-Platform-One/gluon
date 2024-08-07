@@ -8,6 +8,7 @@ Note that changelog entries are only added when there are changes to the chart (
 ## [0.5.2]
 ### Added
 - Added post-install hook to execute wait script for running pipelines 
+- Updated post-install hook to pass helm linting 
 
 ## [0.5.1]
 ### Changed
