@@ -1,7 +1,11 @@
-{{- define "gluon-test.cypress-configmap" }}
 {{- include "gluon.tests.cypress-configmap.overrides" (list . "gluon-test.cypress-configmap") }}
+{{- define "gluon-test.cypress-configmap" }}
 {{- end }}
 ---
 {{- define "gluon-test.cypress-runner" -}}
 {{- include "gluon.tests.cypress-runner.overrides" (list . "gluon-test.cypress-runner") -}}
 {{- end }}
+---
+{{- include "gluon.tests.cypress-configmap.base" .}}
+---
+{{- include "gluon.tests.cypress-runner.base" .}}

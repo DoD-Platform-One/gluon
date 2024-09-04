@@ -3,9 +3,9 @@
 replicaCount: 1
 
 image:
-  repository: "registry1.dso.mil/ironbank/opensource/kubernetes/kubectl"
+  repository: "registry1.dso.mil/ironbank/opensource/nginx/nginx"
   pullPolicy: Always
-  tag: "v1.28.12"
+  tag: "1.26.2"
 
 imagePullSecrets:
   - name: private-registry
@@ -39,7 +39,7 @@ affinity: {}
 bbtests:
   enabled: true
   scripts:
-    image: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.28.12
+    image: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.29.8
   cypress:
     artifacts: false
     disableDefaultTests: false
@@ -47,7 +47,7 @@ bbtests:
 waitJob:
   enabled: true
   scripts:
-    image: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.28.12
+    image: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.29.8
   permissions:
     apiGroups:
       - ""
