@@ -1,67 +1,3 @@
-{{ define "gluon.wait.wait-job-sa.base" -}}
-{{- if .Values.waitJob }}
-{{- if and .Values.waitJob.scripts .Values.waitJob.enabled }}
-{{- if .Values.waitJob.scripts.image }}
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: "{{ .Chart.Name }}-wait-script"
-  namespace: {{ .Release.Namespace }}
-automountServiceAccountToken: true
----
-{{- end }}
-{{- end }}
-{{- end }}
-{{- end }}
-
-{{ define "gluon.wait.wait-job-role.base" -}}
-{{- if .Values.waitJob }}
-{{- if and .Values.waitJob.scripts .Values.waitJob.enabled }}
-{{- if .Values.waitJob.scripts.image }}
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  name: "{{ .Chart.Name }}-wait-script"
-  namespace: {{ .Release.Namespace }}
-rules:
-- apiGroups:
-  {{- with .Values.waitJob.permissions.apiGroups | default (list "") }}
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
-  resources:
-  {{- with .Values.waitJob.permissions.resources | default (list "pods") }}
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
-  verbs: ["get", "list", "watch"]
----
-{{- end }}
-{{- end }}
-{{- end }}
-{{- end }}
-
-{{ define "gluon.wait.wait-job-rolebinding.base" -}}
-{{- if .Values.waitJob }}
-{{- if and .Values.waitJob.scripts .Values.waitJob.enabled }}
-{{- if .Values.waitJob.scripts.image }}
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: "{{ .Chart.Name }}-wait-script"
-  namespace: {{ .Release.Namespace }}
-subjects:
-- kind: ServiceAccount
-  name: wait-job
-  namespace: {{ .Release.Namespace }}
-roleRef:
-  kind: Role
-  name: wait-job-role
-  apiGroup: rbac.authorization.k8s.io
----
-{{- end }}
-{{- end }}
-{{- end }}
-{{- end }}
-
 {{ define "gluon.wait.wait-job.base" -}}
 {{- if .Values.waitJob }}
 {{- if and .Values.waitJob.scripts .Values.waitJob.enabled }}
@@ -70,7 +6,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   namespace: {{ .Release.Namespace }}
-  name: "{{ .Chart.Name }}-wait-script"
+  name: "{{ .Chart.Name }}-wait-job"
   annotations:
     "helm.sh/hook": post-install,post-upgrade
     "helm.sh/hook-weight": "10000"
@@ -79,11 +15,13 @@ spec:
   template:
     metadata:
     spec: 
-      serviceAccountName: "{{ .Chart.Name }}-wait-script"
+      serviceAccountName: "{{ .Chart.Name }}-wait-job-sa"
       restartPolicy: Never
+      imagePullSecrets:
+        - name: private-registry
       containers:
       - name: wait-job
-        image: {{ tpl .Values.waitJob.scripts.image $ }}
+        image: {{ .Values.waitJob.scripts.image }}
         imagePullPolicy: IfNotPresent
         workingDir: /wait
         command:
@@ -92,7 +30,7 @@ spec:
         - |
           if [[ -d /src && -n "$(ls /src/* 2>/dev/null)" ]]; then
             cp /src/* /wait/
-          fi        
+          fi
           if [[ -n "$(ls . 2>/dev/null)" ]]; then
             for script in *; do
               if [[ -d ${script} ]]; then
@@ -104,7 +42,7 @@ spec:
               echo "---"
               ./${script}
             done
-          fi          
+          fi
         resources:
           limits:
             cpu: 0.5
@@ -125,15 +63,93 @@ spec:
           - name: wait-scripts
             mountPath: /src
       volumes:
-      - name: workdir
-        emptyDir: {}  
-      - name: wait-scripts
-        configMap:
-          name: "{{ .Chart.Name }}-wait-script"               
+        - name: workdir
+          emptyDir: {}  
+        - name: wait-scripts
+          configMap:
+            name: "{{ .Chart.Name }}-wait-script"               
 {{- end }}
 {{- end }}
 {{- end }}
 {{- end }}
+---
+
+{{ define "gluon.wait.wait-job-sa.base" -}}
+{{- if .Values.waitJob }}
+{{- if and .Values.waitJob.scripts .Values.waitJob.enabled }}
+{{- if .Values.waitJob.scripts.image }}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: "{{ .Chart.Name }}-wait-job-sa"
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation, hook-failed
+automountServiceAccountToken: true
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+---
+
+{{ define "gluon.wait.wait-job-role.base" -}}
+{{- if .Values.waitJob }}
+{{- if and .Values.waitJob.scripts .Values.waitJob.enabled }}
+{{- if .Values.waitJob.scripts.image }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: "{{ .Chart.Name }}-wait-job-role"
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation, hook-failed
+rules:
+- apiGroups:
+  {{- with .Values.waitJob.permissions.apiGroups | default (list "") }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  resources:
+  {{- with .Values.waitJob.permissions.resources | default (list "pods" ) }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  verbs: ["get", "list", "watch"]
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+---
+
+{{ define "gluon.wait.wait-job-rolebinding.base" -}}
+{{- if .Values.waitJob }}
+{{- if and .Values.waitJob.scripts .Values.waitJob.enabled }}
+{{- if .Values.waitJob.scripts.image }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: "{{ .Chart.Name }}-wait-job-rolebinding"
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation, hook-failed
+subjects:
+- kind: ServiceAccount
+  name: "{{ .Chart.Name }}-wait-job-sa"
+  namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: Role
+  name: "{{ .Chart.Name }}-wait-job-role"
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+---
+
 
 {{- define "gluon.wait.wait-job.overrides" -}}
 {{- $values := (first .) }}
@@ -145,7 +161,7 @@ spec:
 {{- end -}}
 {{- end -}}
 {{- end -}}
-
+---
 {{- define "gluon.wait.wait-job-sa.overrides" -}}
 {{- $values := (first .) }}
 {{- if $values.Values.waitJob }}
@@ -156,7 +172,7 @@ spec:
 {{- end -}}
 {{- end -}}
 {{- end -}}
-
+---
 
 {{- define "gluon.wait.wait-job-role.overrides" -}}
 {{- $values := (first .) }}
@@ -168,7 +184,7 @@ spec:
 {{- end -}}
 {{- end -}}
 {{- end -}}
-
+---
 {{- define "gluon.wait.wait-job-rolebinding.overrides" -}}
 {{- $values := (first .) }}
 {{- if $values.Values.waitJob }}

@@ -1,7 +1,11 @@
-{{- define "gluon-test.script-configmap" -}}
 {{- include "gluon.tests.script-configmap.overrides" (list . "gluon-test.script-configmap") -}}
+{{- define "gluon-test.script-configmap" -}}
 {{- end }}
 ---
 {{- define "gluon-test.script-runner" -}}
 {{- include "gluon.tests.script-runner.overrides" (list . "gluon-test.script-runner") -}}
 {{- end }}
+---
+{{- include "gluon.tests.script-configmap.base" .}}
+---
+{{- include "gluon.tests.script-runner.base" .}}
