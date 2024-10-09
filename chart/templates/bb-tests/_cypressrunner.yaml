@@ -88,16 +88,25 @@ spec:
           {{- if .Values.bbtests.cypress }}
           {{- if .Values.bbtests.cypress.artifacts }}
           if [[ -n "$(ls /test/cypress/logs/* 2>/dev/null)" ]]; then
+            echo "found cypress logs from the pod"
             mkdir -p /cypress/logs/{{ .Release.Namespace }}
             mv /test/cypress/logs/* /cypress/logs/{{ .Release.Namespace }}/
+          else
+            echo "no cypress logs found from the pod"
           fi
           if [[ -n "$(ls /test/cypress/screenshots/* 2>/dev/null)" ]]; then
+            echo "found cypress screenshots from the pod"
             mkdir -p /cypress/screenshots/{{ .Release.Namespace }}
             mv /test/cypress/screenshots/* /cypress/screenshots/{{ .Release.Namespace }}/
+          else
+            echo "no cypress screenshots found from the pod"
           fi
           if [[ -n "$(ls /test/cypress/videos/* 2>/dev/null)" ]]; then
+            echo "found cypress videos from the pod"
             mkdir -p /cypress/videos/{{ .Release.Namespace }}
             mv /test/cypress/videos/* /cypress/videos/{{ .Release.Namespace }}/
+          else
+            echo "no cypress videos found from the pod"
           fi
           {{- end }}
           {{- end }}

@@ -41,7 +41,7 @@ bbtests:
   scripts:
     image: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.29.8
   cypress:
-    artifacts: false
+    artifacts: true
     disableDefaultTests: false
 
 waitJob:
