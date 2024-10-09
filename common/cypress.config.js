@@ -1,7 +1,6 @@
-// This file has been moved to big-bang-dockerfiles/cypress repo, but needs to stay here for backwards compatility with gluon versions 0.4.10 and earlier
-const fs = require('fs');
+const topLevelFileSystemForLogs = require('fs');
 
-const logs = [];
+const topLevelLogsForArtifactGeneration = [];
 
 module.exports = {
   defaultCommandTimeout: 12000,
@@ -21,8 +20,9 @@ module.exports = {
         }
       });
       on('after:run', (results) => {
-        fs.writeFile('/test/cypress/logs/results.json', JSON.stringify(results));
-        fs.writeFile('/test/cypress/logs/log.log', logs);
+        topLevelFileSystemForLogs.writeFile('/test/cypress/logs/results.json', JSON.stringify(results));
+        const logs = topLevelLogsForArtifactGeneration.join('\n');
+        topLevelFileSystemForLogs.writeFile('/test/cypress/logs/log.log', logs);
       });
     },
   },

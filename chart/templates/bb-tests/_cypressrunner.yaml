@@ -87,6 +87,10 @@ spec:
           {{- if .Values.bbtests }}
           {{- if .Values.bbtests.cypress }}
           {{- if .Values.bbtests.cypress.artifacts }}
+          if [[ -n "$(ls /test/cypress/logs/* 2>/dev/null)" ]]; then
+            mkdir -p /cypress/logs/{{ .Release.Namespace }}
+            mv /test/cypress/logs/* /cypress/logs/{{ .Release.Namespace }}/
+          fi
           if [[ -n "$(ls /test/cypress/screenshots/* 2>/dev/null)" ]]; then
             mkdir -p /cypress/screenshots/{{ .Release.Namespace }}
             mv /test/cypress/screenshots/* /cypress/screenshots/{{ .Release.Namespace }}/
@@ -94,10 +98,6 @@ spec:
           if [[ -n "$(ls /test/cypress/videos/* 2>/dev/null)" ]]; then
             mkdir -p /cypress/videos/{{ .Release.Namespace }}
             mv /test/cypress/videos/* /cypress/videos/{{ .Release.Namespace }}/
-          fi
-          if [[ -n "$(ls /test/cypress/logs.* 2>/dev/null)" ]]; then
-            mkdir -p /cypress/logs/{{ .Release.Namespace }}
-            mv /test/cypress/logs/* /cypress/logs/{{ .Release.Namespace }}/
           fi
           {{- end }}
           {{- end }}
@@ -114,10 +114,12 @@ spec:
           mountPath: /src
         - name: tmpdir
           mountPath: /tmp
-        - name: videos
-          mountPath: /test/cypress/videos
+        - name: cypress-logs
+          mountPath: /test/cypress/logs
         - name: screenshots
           mountPath: /test/cypress/screenshots
+        - name: videos
+          mountPath: /test/cypress/videos
         - name: logs
           mountPath: /home/node/.npm
         {{- if .Values.bbtests.cypress.customTest}}
@@ -182,9 +184,11 @@ spec:
       emptyDir: {}
     - name: testdir
       emptyDir: {}
-    - name: videos
+    - name: cypress-logs
       emptyDir: {}
     - name: screenshots
+      emptyDir: {}
+    - name: videos
       emptyDir: {}
     - name: logs
       emptyDir: {}
