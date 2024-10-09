@@ -3,7 +3,7 @@
 // Log to the artifact and the cypress console
 // This task is defined in the cypress.config.js file
 Cypress.Commands.overwrite("log", function(log, ...args) {
-  return cy.task("log", args, { log: false }).then(() => {
+  return cy.task("log", args).then(() => {
     return log(...args);
   });
 });
