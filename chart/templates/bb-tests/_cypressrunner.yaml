@@ -52,7 +52,7 @@ spec:
         readOnlyRootFilesystem: true
       {{- if .Values.bbtests }}
       {{- if .Values.bbtests.cypress }}
-      image: {{ .Values.bbtests.cypress.image | default "registry1.dso.mil/bigbang-ci/cypress:13.13.2" }}
+      image: {{ .Values.bbtests.cypress.image | default "registry1.dso.mil/bigbang-ci/cypress:13.15.0" }}
       {{- end }}
       {{- end }}
       imagePullPolicy: IfNotPresent
@@ -94,6 +94,10 @@ spec:
           if [[ -n "$(ls /test/cypress/videos/* 2>/dev/null)" ]]; then
             mkdir -p /cypress/videos/{{ .Release.Namespace }}
             mv /test/cypress/videos/* /cypress/videos/{{ .Release.Namespace }}/
+          fi
+          if [[ -n "$(ls /test/cypress/logs.* 2>/dev/null)" ]]; then
+            mkdir -p /cypress/logs/{{ .Release.Namespace }}
+            mv /test/cypress/logs/* /cypress/logs/{{ .Release.Namespace }}/
           fi
           {{- end }}
           {{- end }}

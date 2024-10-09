@@ -1,5 +1,13 @@
 // Commands shared across multiple package tests
 
+// Log to the artifact and the cypress console
+// This task is defined in the cypress.config.js file
+Cypress.Commands.overwrite("log", function(log, ...args) {
+  return cy.task("log", args, { log: false }).then(() => {
+    return log(...args);
+  });
+});
+
 // Clear all session related data
 // Example: cy.clearAllUserData()
 Cypress.Commands.add('clearAllUserData', () => {
