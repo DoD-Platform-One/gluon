@@ -153,6 +153,14 @@ spec:
       env:
         - name: XDG_CONFIG_HOME
           value: "/tmp"
+        - name: cypress_gluon_version
+          {{- $gluonVersion := "0.5.4" }}
+          {{- range .Chart.Dependencies }}
+            {{- if eq .Name "gluon" }}
+              {{- $gluonVersion = .Version }}
+            {{- end }}
+          {{- end }}
+          value: "{{ $gluonVersion }}"
       {{- if .Values.bbtests }}
       {{- if .Values.bbtests.cypress }}
       {{- if or .Values.bbtests.cypress.envs .Values.bbtests.cypress.secretEnvs }}
