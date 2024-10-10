@@ -1,11 +1,17 @@
 // Commands shared across multiple package tests
+const semver = require("semver");
+const gluonVersion = Cypress.env("gluon_version") ?? "0.5.4";
 
 // Log to the artifact and the cypress console
 // This task is defined in the cypress.config.js file
 Cypress.Commands.overwrite("log", function(log, ...args) {
-  return cy.task("log", args).then(() => {
+  if (semver.gte(gluonVersion, "0.5.7")) {
+    return cy.task("log", args).then(() => {
+      return log(...args);
+    });
+  } else {
     return log(...args);
-  });
+  }
 });
 
 // Clear all session related data
