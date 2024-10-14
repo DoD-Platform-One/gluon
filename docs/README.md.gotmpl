@@ -9,7 +9,7 @@
 {{ if or .Home .Sources }}
 ## Upstream References
 {{- if .Home }}
-* <{{ template "chart.homepage" . }}>
+- <{{ template "chart.homepage" . }}>
 {{- end }}
 {{ template "chart.sourcesList" . }}
 {{ end }}
@@ -17,14 +17,15 @@
 {{ template "extra.upstreamReleaseNotesMarkdown" . }}
 
 ## Learn More
-* [Application Overview](docs/overview.md)
-* [Other Documentation](docs/)
+
+- [Application Overview](docs/overview.md)
+- [Other Documentation](docs/)
 
 ## Pre-Requisites
 
-* Kubernetes Cluster deployed
-* Kubernetes config installed in `~/.kube/config`
-* Helm installed
+- Kubernetes Cluster deployed
+- Kubernetes config installed in `~/.kube/config`
+- Helm installed
 
 {{ template "chart.kubeVersionLine" . }}
 
@@ -34,8 +35,9 @@ https://helm.sh/docs/intro/install/
 
 ## Deployment
 
-* Clone down the repository
-* cd into directory
+- Clone down the repository
+- cd into directory
+
 ```bash
 helm install {{ template "chart.name" . }} chart/
 ```
