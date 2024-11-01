@@ -1,10 +1,10 @@
 # Wait Job Templates
 The library supports a wait-job template for waiting on specific conditions before proceeding with further steps. This template is useful for scenarios where certain resources or conditions need to be met before continuing with the deployment. The wait-job template is described below along with examples of how to implement it.
 
-You will need to set the `waitjob.enabled` toggle to true in your package `values.yaml` file so that the wait-jobs are deployed.
+You will need to set the `waitJob.enabled` toggle to true in your package `values.yaml` file so that the wait-jobs are deployed.
 
 ```yaml
-waitjob:
+waitJob:
   enabled: true
 ```
 
@@ -78,9 +78,10 @@ Next, include values that would be needed for the wait-jobs in your `chart/value
 
 The following values can be configured for the wait-job in your `chart/values.yaml` file:
 
-- `waitjob.scripts.image`: This defines the container image to be used for running scripts in the wait-job. 
-- `waitjob.permissions.apiGroups`: This defines the API groups that the wait-job should have access to. This should be a list of API groups.
-- `waitjob.permissions.resources`: This defines the resources that the wait-job should have access to. This should be a list of resources.
+- `waitJob.scripts.image`: This defines the container image to be used for running scripts in the wait-job. 
+- `waitJob.permissions.apiGroups`: This defines the API groups that the wait-job should have access to. This should be a list of API groups.
+- `waitJob.permissions.resources`: This defines the resources that the wait-job should have access to. This should be a list of resources.
+- `waitJob.permissions.verbs`: This (optional) list defines the verbs that can be taken upon the resources the wait-job has access to. If not provided, this defaults to `["list", "get", "watch"]`.
 
 A sample is included below:
 
@@ -97,6 +98,12 @@ waitJob:
      - tenants
      - tenant
      - tenants.minio.min.io
+    verbs:
+     - delete
+     - create
+     - list
+     - get
+     - watch
 ```
 
 ### Wait script

@@ -116,7 +116,10 @@ rules:
   {{- with .Values.waitJob.permissions.resources | default (list "pods" ) }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  verbs: ["get", "list", "watch"]
+  verbs: 
+  {{- with .Values.waitJob.permissions.verbs | default (list "get"  "list"  "watch") }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 {{- end }}
 {{- end }}
 {{- end }}

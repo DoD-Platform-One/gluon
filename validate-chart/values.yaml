@@ -53,3 +53,9 @@ waitJob:
       - ""
     resources:
       - pods
+    verbs:
+      - create
+      - delete
+      - list
+      - get
+      - watch
