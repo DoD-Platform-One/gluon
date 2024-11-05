@@ -1,6 +1,6 @@
 dependencies:
 - name: gluon
   repository: file://../chart
-  version: 0.5.8
-digest: sha256:b0457828c846b48e9225f1b840f1e7549764aabb5c901628c6595434b4d93d27
-generated: "2024-10-10T10:30:06.440971644-06:00"
+  version: 0.5.9
+digest: sha256:0b4021defaebd8a78e7fbfefe693e112ebc90889bcd35cf23b2e452d8af9aea5
+generated: "2024-11-05T11:28:03.800063351-07:00"

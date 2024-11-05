@@ -86,12 +86,13 @@ Cypress.Commands.add('deleteGitlabProject', (url, username, projectName) => {
 
 // Validate Prometheus Target
 // Example: cy.validatePromTarget("cluster-auditor\/opa-exporter\/0", "(1/1 up)")
-Cypress.Commands.add('validatePromTarget', (monitorText, textToMatch) => {
+// Example: cy.validatePromTarget("cluster-auditor\/opa-exporter\/0", /\(([0-9]+)\/\1 up\)/)
+Cypress.Commands.add('validatePromTarget', (monitorText, match) => {
   cy.get(`button:contains("${monitorText}")`)
     .click({force: true})
   cy.get(`a[href*="${monitorText}"]`)
     .should('be.visible')
-    .and('contain', textToMatch)
+    .contains(match)
 })
 
 // Load Grafana Dashboard
