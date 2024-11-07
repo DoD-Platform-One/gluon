@@ -5,9 +5,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 Note that changelog entries are only added when there are changes to the chart (docs changes do not require a new version/changelog entry).
 
 ---
-## [0.5.9]
+## [0.5.10]
 ### Added
 - Added support of using regular expressions in the validatePromTarget command
+
+## [0.5.9]
+### Added
+- Added the ability to provide a custom verb list to the waitjob role
 
 ## [0.5.8]
 ### Added
