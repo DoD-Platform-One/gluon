@@ -12,3 +12,17 @@
 
 {{ index $chartYaml.annotations "bigbang.dev/upstreamReleaseNotesMarkdown" | default $defaultNotes }}
 {{ end }}
+
+{{- define "extra.packageMaintenanceTrackBadge" }}
+{{- $chartYaml := (.Files.Get "Chart.yaml") | fromYaml }}
+{{- $track := index $chartYaml.annotations "bigbang.dev/maintenanceTrack" | default "unknown" | replace "-" "" | trim }}
+{{- $trackColor := "red" }}
+{{- if eq $track "bb_integrated" }}
+{{- $trackColor = "green" }}
+{{- else if eq $track "bb_maintained" }}
+{{- $trackColor = "yellow" }}
+{{- else if eq $track "community" }}
+{{- $trackColor = "orange" }}
+{{- end -}}
+[![Maintenance Track: {{ $track }}](https://img.shields.io/badge/Maintenance_Track-{{ $track }}-{{ $trackColor }}?style=flat-square)](https://repo1.dso.mil/big-bang/product/bbtoc/-/blob/main/process/Package%20Maintenance%20Tracks.md)
+{{- end }}
