@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 Note that changelog entries are only added when there are changes to the chart (docs changes do not require a new version/changelog entry).
 
 ---
+## [0.5.12]
+### Added
+- Removing the link from the maintenance badge to fix the formatting in GitLab
+
 ## [0.5.11]
 ### Added
 - Added the package maintenance badge to the README generator
