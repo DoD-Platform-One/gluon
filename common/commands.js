@@ -48,7 +48,7 @@ Cypress.Commands.add('performGrafanaLogin', (username, password) => {
 Cypress.Commands.add('performGitlabLogin', (username, password) => {
   cy.get('input[id="user_login"]').type(username)
   cy.get('input[id="user_password"]').type(password)
-  cy.get('button[data-testid="sign-in-button"').click()
+  cy.get('button[data-testid="sign-in-button"]').click()
 })
 
 // Create Gitlab Project
