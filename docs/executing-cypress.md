@@ -37,7 +37,7 @@ Due to the differences in CPU architectures, the existing Cypress container cann
  docker build . -t cypress:local
 ```
 
-#### Linux and Windows Subsystem for Linux (WSL) Requirments
+#### Linux and Windows Subsystem for Linux (WSL) Requirements
 
 Download the currently used Cypress image to your local workstation:
 
@@ -58,7 +58,8 @@ With the above requirements met you can now clone the [Gluon repository](https:/
 For MAC, run the container with the following command using your locally built image:
 
 ```bash
-docker run -it --entrypoint /bin/bash --rm --mount type=bind,source=$REPO_PATH/{ReplaceWithPackageBeingTested}/$CYPRESS_SLUG=/test/cypress/e2e --mount type=bind,source=$REPO_PATH/gluon/common,target=/test/cypress/common --mount type=bind,source=$VIDEO_PATH,target=/test/cypress/videos --name cypress cypress:local
+docker run -it --entrypoint /bin/bash --rm --mount type=bind,source=$REPO_PATH/{ReplaceWithPackageBeingTested}/$CYPRESS_SLUG,target=/test/cypress/e2e --mount type=bind,source=$REPO_PATH/gluon/common,target=/test/cypress/common --mount type=bind,source=$VIDEO_PATH,target=/test/cypress/videos --name cypress cypress:local
+
 ```
 
 Otherwise, run the following command specifying the image you pulled earlier:
