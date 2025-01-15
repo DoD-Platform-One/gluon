@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 Note that changelog entries are only added when there are changes to the chart (docs changes do not require a new version/changelog entry).
 
 ---
+## [0.5.14]
+### Changed
+- set the following under the wait job  spec.template.spec.containers.securityContext.allowPrivilegeEscalation: false
+- updating cypress to 13.17
+
 ## [0.5.13]
 ### Added
 - Fixed bug in mac cypress run command and typo
