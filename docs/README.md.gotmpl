@@ -8,10 +8,10 @@
 
 {{ if or .Home .Sources }}
 ## Upstream References
-{{- if .Home }}
+{{ if .Home }}
 - <{{ template "chart.homepage" . }}>
 {{- end }}
-{{ template "chart.sourcesList" . }}
+{{- template "chart.sourcesList" . -}}
 {{ end }}
 
 {{ template "extra.upstreamReleaseNotesMarkdown" . }}
