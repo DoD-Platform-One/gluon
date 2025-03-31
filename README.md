@@ -4,6 +4,10 @@
 
 A Helm chart for Kubernetes
 
+After making changes to Gluon, the `validate-chart/charts/gluon-x.x.xx.tgz` file must be updated. To do this:
+1. From the root directory, run `cd validate-chart`
+2. Run `helm dependency update`
+
 ## Learn More
 
 * [Application Overview](docs/overview.md)
