@@ -1,0 +1,69 @@
+{
+  "baseBranches": [
+      "add-renovate"
+  ],
+  "configWarningReuseIssue": false,
+  "dependencyDashboard": true,
+  "dependencyDashboardTitle": "Renovate: Upgrade images",
+  "draftPR": true,
+  "enabledManagers": [
+      "custom.regex"
+  ],
+  "labels": ["kind::maintenance","renovate"],
+  "packageRules": [
+      {
+          "matchDatasources": [
+            "docker"
+          ]
+      }
+  ],
+  "customManagers": [
+      {
+          "customType": "regex",
+          "fileMatch": [
+            ".*values\\.yaml$"
+          ],
+          "matchStrings": [
+            "repository:\\s*\"(registry1.dso.mil/ironbank/opensource/nginx/nginx)\"\\s*\\n\\s*pullPolicy:\\s*Always\\s*\\n\\s*tag:\\s*\"(?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)\""
+          ],
+          "depNameTemplate": "registry1.dso.mil/ironbank/opensource/nginx/nginx",
+          "datasourceTemplate": "docker"
+      },
+      {
+          "customType": "regex",
+          "fileMatch": [
+          ".*values\\.yaml$"
+          ],
+          "matchStrings": [
+            "\\s*image:\\s*(?<depName>registry1\\.dso\\.mil\\/ironbank\\/opensource\\/kubernetes\\/kubectl):(?<currentValue>v[\\d\\.]+)"
+          ],
+          "depNameTemplate": "registry1.dso.mil/ironbank/opensource/kubernetes/kubectl",
+          "datasourceTemplate": "docker"
+      },
+      {
+          "customType": "regex",
+          "fileMatch": [
+          ".*/_waitjob\\.yaml$"
+          ],
+          "matchStrings": [
+            "registry1\\.dso\\.mil/ironbank/opensource/kubernetes/kubectl:(?<currentValue>v[0-9]+\\.[0-9]+\\.[0-9]+)\""
+          ],
+          "depNameTemplate": "registry1.dso.mil/ironbank/opensource/kubernetes/kubectl",
+          "datasourceTemplate": "docker"
+      },
+      {
+          "customType": "regex",
+          "fileMatch": [
+          ".*/_cypressrunner\\.yaml$"
+          ],
+          "matchStrings": [
+            "registry1\\.dso\\.mil/bigbang-ci/cypress:(?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)\""
+          ],
+          "depNameTemplate": "registry1.dso.mil/bigbang-ci/cypress",
+          "datasourceTemplate": "docker"
+      }
+    ],
+    "separateMajorMinor": false
+  }
+  
+  
