@@ -1,6 +1,6 @@
 {
   "baseBranches": [
-      "add-renovate"
+      "master"
   ],
   "configWarningReuseIssue": false,
   "dependencyDashboard": true,
