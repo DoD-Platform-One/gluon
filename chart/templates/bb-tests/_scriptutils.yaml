@@ -1,0 +1,52 @@
+{{- define "gluon.tests.script-sa" }}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Chart.Name }}-script-sa
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    "helm.sh/hook": test-success
+    "helm.sh/hook-weight": "-5"
+{{- end }}
+
+{{- define "gluon.tests.script-role" }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ .Chart.Name }}-script-role
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    "helm.sh/hook": test-success
+    "helm.sh/hook-weight": "-5"
+rules:
+- apiGroups: [""]
+  resources: ["configmaps"]
+  verbs: ["create", "get", "list", "delete"]
+{{- end }}
+
+{{- define "gluon.tests.script-rolebinding" }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ .Chart.Name }}-script-rolebinding
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    "helm.sh/hook": test-success
+    "helm.sh/hook-weight": "-5"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ .Chart.Name }}-script-role
+subjects:
+- kind: ServiceAccount
+  name: {{ .Chart.Name }}-script-sa
+  namespace: {{ .Release.Namespace }}
+{{- end }}
+
+{{- define "gluon.tests.script-rbac" }}
+{{- include "gluon.tests.script-sa" . }}
+---
+{{- include "gluon.tests.script-role" . }}
+---
+{{- include "gluon.tests.script-rolebinding" . }}
+{{- end }}
