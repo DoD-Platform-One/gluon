@@ -5,75 +5,116 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 Note that changelog entries are only added when there are changes to the chart (docs changes do not require a new version/changelog entry).
 
 ---
-## [0.5.17]
+
+## [0.5.18]
+
 ### Changed
+
+- Updated `kubectl` version to `v1.32.4`
+- Updated `nginx` version to `1.27.5`
+
+## [0.5.17]
+
+### Changed
+
 - Add service Account functionality to scripts
 
 ## [0.5.16]
+
 ### Changed
+
 - Add default for waitJob image
 
 ## [0.5.15]
+
 ### Changed
+
 - Set the wait job image in Gluon rather than in the package
 
 ## [0.5.14]
+
 ### Changed
+
 - set the following under the wait job  spec.template.spec.containers.securityContext.allowPrivilegeEscalation: false
 - updating cypress to 13.17
 
 ## [0.5.13]
+
 ### Added
+
 - Fixed bug in mac cypress run command and typo
 
 ## [0.5.12]
+
 ### Added
+
 - Removing the link from the maintenance badge to fix the formatting in GitLab
 
 ## [0.5.11]
+
 ### Added
+
 - Added the package maintenance badge to the README generator
 
 ## [0.5.10]
+
 ### Added
+
 - Added support of using regular expressions in the validatePromTarget command
 
 ## [0.5.9]
+
 ### Added
+
 - Added the ability to provide a custom verb list to the waitjob role
 
 ## [0.5.8]
+
 ### Added
+
 - Fixing the backward compatibility of cypress logs
 
 ## [0.5.7]
+
 ### Added
+
 - Fixing the output of cypress logs
 
 ## [0.5.6]
+
 ### Added
+
 - Fixing the cypress runner for logs
 
 ## [0.5.5]
+
 ### Added
+
 - Updating cypress version
 - Adding the logs for the cypress test to artifacts
 
 ## [0.5.4]
+
 ### Added
+
 - Updating post-install wait hook
 - Fixing Cypress tests
 
 ## [0.5.3]
+
 ### Added
+
 - update cypress default image
 
 ## [0.5.2]
+
 ### Added
-- Added post-install hook to execute wait script for running pipelines 
-- Updated post-install hook to pass helm linting 
+
+- Added post-install hook to execute wait script for running pipelines
+- Updated post-install hook to pass helm linting
 
 ## [0.5.1]
+
 ### Changed
 
 - Bumps `helm-docs` image version recommendation from `1.10.0` to `1.14.2`.
