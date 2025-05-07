@@ -1,6 +1,6 @@
 # validate-chart
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 12.11.0](https://img.shields.io/badge/AppVersion-12.11.0-informational?style=flat-square)
+![Version: 0.1.5](https://img.shields.io/badge/Version-0.1.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 12.11.0](https://img.shields.io/badge/AppVersion-12.11.0-informational?style=flat-square)
 
 A Helm chart for Kubernetes
 
@@ -56,7 +56,7 @@ helm install validate-chart chart/
 | tolerations | list | `[]` |  |
 | affinity | object | `{}` |  |
 | bbtests.enabled | bool | `true` |  |
-| bbtests.scripts.image | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.28.7"` |  |
+| bbtests.scripts.image | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.32.4"` |  |
 | bbtests.cypress.artifacts | bool | `true` |  |
 | bbtests.cypress.disableDefaultTests | bool | `false` |  |
 
