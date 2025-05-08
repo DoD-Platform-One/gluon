@@ -31,10 +31,10 @@ spec:
     {{- range .Values.bbtests.istio.hosts }}
       - {{ tpl . $ }}
     {{- end }}
+  {{- end }}
+  {{- end }}
+  {{- end }}
   serviceAccountName: {{ .Chart.Name }}-script-sa
-  {{- end }}
-  {{- end }}
-  {{- end }}
   containers:
     - name: {{ .Chart.Name }}-script-test
       securityContext:

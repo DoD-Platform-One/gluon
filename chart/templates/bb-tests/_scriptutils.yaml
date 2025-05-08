@@ -5,7 +5,7 @@ metadata:
   name: {{ .Chart.Name }}-script-sa
   namespace: {{ .Release.Namespace }}
   annotations:
-    "helm.sh/hook": test-success
+    "helm.sh/hook": test
     "helm.sh/hook-weight": "-5"
 {{- end }}
 
@@ -16,7 +16,7 @@ metadata:
   name: {{ .Chart.Name }}-script-role
   namespace: {{ .Release.Namespace }}
   annotations:
-    "helm.sh/hook": test-success
+    "helm.sh/hook": test
     "helm.sh/hook-weight": "-5"
 rules:
 - apiGroups: [""]
@@ -31,7 +31,7 @@ metadata:
   name: {{ .Chart.Name }}-script-rolebinding
   namespace: {{ .Release.Namespace }}
   annotations:
-    "helm.sh/hook": test-success
+    "helm.sh/hook": test
     "helm.sh/hook-weight": "-5"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
