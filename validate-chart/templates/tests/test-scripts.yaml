@@ -9,3 +9,9 @@
 {{- include "gluon.tests.script-configmap.base" .}}
 ---
 {{- include "gluon.tests.script-runner.base" .}}
+---
+{{- include "gluon.tests.script-sa" . }}
+---
+{{- include "gluon.tests.script-role" . }}
+---
+{{- include "gluon.tests.script-rolebinding" . }}
