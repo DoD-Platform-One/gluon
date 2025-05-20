@@ -5,6 +5,7 @@
 A Helm chart for Kubernetes
 
 After making changes to Gluon, the `validate-chart/charts/gluon-x.x.xx.tgz` file must be updated. To do this:
+
 1. From the root directory, run `cd validate-chart`
 2. Run `helm dependency update`
 
@@ -56,7 +57,7 @@ helm install validate-chart chart/
 | tolerations | list | `[]` |  |
 | affinity | object | `{}` |  |
 | bbtests.enabled | bool | `true` |  |
-| bbtests.scripts.image | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.32.4"` |  |
+| bbtests.scripts.image | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.32.5"` |  |
 | bbtests.cypress.artifacts | bool | `true` |  |
 | bbtests.cypress.disableDefaultTests | bool | `false` |  |
 
