@@ -5,6 +5,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 Note that changelog entries are only added when there are changes to the chart (docs changes do not require a new version/changelog entry).
 
 ---
+## [0.5.21]
+
+### Changed
+
+- Added the ability to provide a custom permissions to the script-runner role
+- Updated `_scriptruner.yaml` to include rbac definitions
+- Update `renovate.json` to track default image in `_scriptrunner.yaml`
+
 
 ## [0.5.20]
 

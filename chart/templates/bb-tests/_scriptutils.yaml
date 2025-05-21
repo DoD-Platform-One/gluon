@@ -19,9 +19,18 @@ metadata:
     "helm.sh/hook": test
     "helm.sh/hook-weight": "-5"
 rules:
-- apiGroups: [""]
-  resources: ["configmaps"]
-  verbs: ["create", "get", "list", "delete"]
+- apiGroups:
+  {{- with .Values.bbtests.scripts.permissions.apiGroups | default (list "") }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  resources:
+  {{- with .Values.bbtests.scripts.permissions.resources | default (list "configmaps") }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  verbs: 
+  {{- with .Values.bbtests.scripts.permissions.verbs | default (list "get" "list" "create" "delete") }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 {{- end }}
 
 {{- define "gluon.tests.script-rolebinding" }}
