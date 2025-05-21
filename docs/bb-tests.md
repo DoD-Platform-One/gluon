@@ -185,7 +185,7 @@ metadata:
 The second step to implementing these tests will be including values in your `test-values.yaml` file that would be
 needed for the tests. There are several values you will want to consider, only the image value is required:
 
-- `bbtests.scripts.image`: REQUIRED, this is the image name that should be used to run your script. This should be a
+- `bbtests.scripts.image`: This is the image name that should be used to run your script. This should be a
   small image with the CLI tools needed (for example, to test Minio you would want an image with Minio CLI). Ironbank
   images are not required but are preferred if one exists with the CLI tool you need installed. This field supports Helm
   templating if you want to grab an image being used elsewhere in your values (ex: `image: "{{ .Values.my.spec.to.image }}"`).
@@ -203,6 +203,9 @@ needed for the tests. There are several values you will want to consider, only t
 - `bbtest.scripts.resources`: This defines requests and limits to set in the main script container itself. This takes normal Kubernetes `resources` configuration in `yaml`. This supports `Helm` templating for values.
 - `bbtests.istio.hosts`: This defines istio hostnames to add to the script test pods /etc/hosts for resolution.
   It should be defined as a list and supports helm templating. Note this will also apply to any cypress tests.
+- `bbtests.scripts.permissions.apiGroups`: This defines the API groups that the scriptrunner should have access to. This should be a list of API groups.
+- `bbtests.scripts.permissions.resources`: This defines the resources that the scriptrunner should have access to. This should be a list of resources.
+- `bbtests.scripts.permissions.verbs`: This (optional) list defines the verbs that can be taken upon the resources the scriptrunner has access to. If not provided, this defaults to `["get", "list", "delete", "create"]`.
 
 A sample is included below:
 
@@ -211,6 +214,16 @@ bbtests:
   enabled: true
   scripts:
     image: "{{ .Values.mcImage }}"
+    permissions:
+      apiGroups:
+        - ""
+      resources:
+        - configmaps
+      verbs:
+        - create
+        - delete
+        - list
+        - get
     additionalVolumeMounts:
       - name: "{{ .Chart.Name }}-example"
         mountPath: /example

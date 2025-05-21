@@ -43,7 +43,8 @@
       {
           "customType": "regex",
           "fileMatch": [
-          ".*/_waitjob\\.yaml$"
+          ".*/_waitjob\\.yaml$",
+          ".*/_scriptrunner\\.yaml$"
           ],
           "matchStrings": [
             "registry1\\.dso\\.mil/ironbank/opensource/kubernetes/kubectl:(?<currentValue>v[0-9]+\\.[0-9]+\\.[0-9]+)\""
