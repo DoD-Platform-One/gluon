@@ -42,7 +42,7 @@ Due to the differences in CPU architectures, the existing Cypress container cann
 Download the currently used Cypress image to your local workstation:
 
 ```bash
-docker pull registry1.dso.mil/bigbang-ci/cypress-kubectl:13.8.1
+docker pull registry1.dso.mil/bigbang-ci/cypress:14.4.0
 ```
 
 > **_NOTE:_** You can check the default image specified in [this file](https://repo1.dso.mil/big-bang/product/packages/gluon/-/blob/master/chart/templates/bb-tests/_cypressrunner.yaml?ref_type=heads) to identify the current default Cypress image being used.

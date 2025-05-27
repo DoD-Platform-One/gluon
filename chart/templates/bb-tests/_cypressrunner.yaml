@@ -52,7 +52,7 @@ spec:
         readOnlyRootFilesystem: true
       {{- if .Values.bbtests }}
       {{- if .Values.bbtests.cypress }}
-      image: {{ .Values.bbtests.cypress.image | default "registry1.dso.mil/bigbang-ci/cypress:13.17.0" }}
+      image: {{ .Values.bbtests.cypress.image | default "registry1.dso.mil/bigbang-ci/cypress:14.4.0" }}
       {{- end }}
       {{- end }}
       imagePullPolicy: IfNotPresent
