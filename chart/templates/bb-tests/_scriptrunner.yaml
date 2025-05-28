@@ -40,7 +40,11 @@ spec:
           drop:
           - ALL
         readOnlyRootFilesystem: true
-      image: {{ .Values.bbtests.scripts.image | default "registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.32.5" }}
+      {{- if and .Values.bbtests .Values.bbtests.scripts .Values.bbtests.scripts.image }}
+      image: {{ .Values.bbtests.scripts.image }}
+      {{- else }}
+      image: "registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.32.5"
+      {{- end }}
       imagePullPolicy: IfNotPresent
       workingDir: /test
       command:
@@ -95,16 +99,21 @@ spec:
         {{- end }}
         {{- end }}
         {{- end }}
+      {{- if and .Values.bbtests .Values.bbtests.scripts }}
       {{- if or .Values.bbtests.scripts.envs .Values.bbtests.scripts.secretEnvs }}
       env:
+      {{- if .Values.bbtests.scripts.envs }}
       {{- range $k, $v := .Values.bbtests.scripts.envs }}
         - name: {{ tpl $k $ }}
           value: {{ tpl $v $ | quote }}
+      {{- end }}
       {{- end }}
       {{- if .Values.bbtests.scripts.secretEnvs }}
       {{- tpl (toYaml .Values.bbtests.scripts.secretEnvs) $ | nindent 8 }}
       {{- end }}
       {{- end }}
+      {{- end }}
+      {{- if and .Values.bbtests .Values.bbtests.scripts }}
       resources:
       {{- if .Values.bbtests.scripts.resources }}
         requests:
@@ -120,6 +129,7 @@ spec:
         limits:
           cpu: "1"
           memory: "1Gi"
+      {{- end }}
       {{- end }}
   restartPolicy: Never
   volumes:
@@ -173,7 +183,7 @@ spec:
 {{- include "gluon.tests.script-rbac" $values }}
 ---
 {{- end }}
-{{- include "gluon.util.merge" (append . "gluon.tests.script-runner.tpl") }}
+{{- include "gluon.util.merge" (append . "gluon.tests.script-runner.base") }}
 {{- end }}
 {{- end }}
 {{- end }}
