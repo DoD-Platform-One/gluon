@@ -173,9 +173,7 @@ spec:
 {{- include "gluon.tests.script-rbac" $values }}
 ---
 {{- end }}
-
+{{- include "gluon.util.merge" (append . "gluon.tests.script-runner.tpl") }}
 {{- end }}
-{{- include "gluon.util.merge" (append . "gluon.tests.script-runner.base") -}}
-
-{{- end -}}
-{{- end -}}
+{{- end }}
+{{- end }}
