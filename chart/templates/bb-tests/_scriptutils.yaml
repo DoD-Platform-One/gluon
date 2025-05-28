@@ -20,16 +20,25 @@ metadata:
     "helm.sh/hook-weight": "-5"
 rules:
 - apiGroups:
-  {{- with .Values.bbtests.scripts.permissions.apiGroups | default (list "") }}
-    {{- toYaml . | nindent 4 }}
+  {{- if and .Values.bbtests .Values.bbtests.scripts .Values.bbtests.scripts.permissions .Values.bbtests.scripts.permissions.apiGroups }}
+    {{- toYaml .Values.bbtests.scripts.permissions.apiGroups | nindent 4 }}
+  {{- else }}
+    - ""
   {{- end }}
   resources:
-  {{- with .Values.bbtests.scripts.permissions.resources | default (list "configmaps") }}
-    {{- toYaml . | nindent 4 }}
+  {{- if and .Values.bbtests .Values.bbtests.scripts .Values.bbtests.scripts.permissions .Values.bbtests.scripts.permissions.resources }}
+    {{- toYaml .Values.bbtests.scripts.permissions.resources | nindent 4 }}
+  {{- else }}
+    - configmaps
   {{- end }}
-  verbs: 
-  {{- with .Values.bbtests.scripts.permissions.verbs | default (list "get" "list" "create" "delete") }}
-    {{- toYaml . | nindent 4 }}
+  verbs:
+  {{- if and .Values.bbtests .Values.bbtests.scripts .Values.bbtests.scripts.permissions .Values.bbtests.scripts.permissions.verbs }}
+    {{- toYaml .Values.bbtests.scripts.permissions.verbs | nindent 4 }}
+  {{- else }}
+    - get
+    - list
+    - create
+    - delete
   {{- end }}
 {{- end }}
 
