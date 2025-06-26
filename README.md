@@ -57,7 +57,7 @@ helm install validate-chart chart/
 | tolerations | list | `[]` |  |
 | affinity | object | `{}` |  |
 | bbtests.enabled | bool | `true` |  |
-| bbtests.scripts.image | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.32.5"` |  |
+| bbtests.scripts.image | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.32.6"` |  |
 | bbtests.cypress.artifacts | bool | `true` |  |
 | bbtests.cypress.disableDefaultTests | bool | `false` |  |
 
