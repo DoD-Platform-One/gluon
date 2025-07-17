@@ -52,7 +52,7 @@ spec:
         readOnlyRootFilesystem: true
       {{- if .Values.bbtests }}
       {{- if .Values.bbtests.cypress }}
-      image: {{ .Values.bbtests.cypress.image | default "registry1.dso.mil/bigbang-ci/cypress:14.4.0" }}
+      image: {{ .Values.bbtests.cypress.image | default "registry1.dso.mil/ironbank/big-bang/cypress@sha256:5bcf38c737aef09c51f5d43e5c3348849415b8e25ef93e5e2f2d0e809675c478" }}
       {{- end }}
       {{- end }}
       imagePullPolicy: IfNotPresent
