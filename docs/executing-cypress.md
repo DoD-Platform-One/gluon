@@ -29,7 +29,7 @@ tests
 
 Due to the differences in CPU architectures, the existing Cypress container cannot be used reliably on a MAC so it will need to be built locally before you can begin testing.  In order to do this you will need to perform the following steps to build the image locally:
 
-1. Clone the [Cypress Image Repo](https://repo1.dso.mil/big-bang/pipeline-templates/big-bang-dockerfiles/cypress)
+1. Clone the [Cypress Image Repo](https://repo1.dso.mil/dsop/big-bang/cypress)
 
 2. Change to the directory of the downloaded repository and execute the following command:
 
