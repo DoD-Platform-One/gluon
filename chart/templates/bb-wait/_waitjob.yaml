@@ -10,10 +10,12 @@ metadata:
   annotations:
     "helm.sh/hook": post-install,post-upgrade
     "helm.sh/hook-weight": "10000"
-    "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation, hook-failed
+    "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation,hook-failed
 spec:
   template:
     metadata:
+      labels:
+        wait-job: enabled
     spec: 
       serviceAccountName: "{{ .Chart.Name }}-wait-job-sa"
       restartPolicy: Never
@@ -24,6 +26,15 @@ spec:
         image: {{ .Values.waitJob.scripts.image | default "registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.32.6" }}
         imagePullPolicy: IfNotPresent
         workingDir: /wait
+        env:
+        - name: K8S_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: K8S_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
         command:
         - "/bin/bash"
         - "-c"
@@ -160,7 +171,28 @@ roleRef:
 {{- if $values.Values.waitJob }}
 {{- if and $values.Values.waitJob.scripts $values.Values.waitJob.enabled }}
 {{- if $values.Values.waitJob.scripts.image }}
-{{- include "gluon.util.merge" (append . "gluon.wait.wait-job.base") -}}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress-from-{{ $values.Chart.Name }}-wait-job-to-anywhere-any-port
+  namespace: {{ $values.Release.Namespace }}
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+spec:
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+              - 169.254.169.254/32
+  podSelector:
+    matchLabels:
+      wait-job: enabled
+  policyTypes:
+    - Egress
+---
+{{ include "gluon.util.merge" (append . "gluon.wait.wait-job.base") -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}

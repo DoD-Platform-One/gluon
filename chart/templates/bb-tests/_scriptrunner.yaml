@@ -1,5 +1,26 @@
 {{- define "gluon.tests.script-runner.tpl" -}}
 {{- if ne false ((.Values.bbtests).scripts).enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress-from-{{ .Chart.Name }}-script-test-to-anywhere-any-port
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    helm.sh/hook: test
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+spec:
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+              - 169.254.169.254/32
+  podSelector:
+    matchLabels:
+      helm-test: enabled
+  policyTypes:
+    - Egress
+---
 kind: Pod
 apiVersion: v1
 metadata:
@@ -102,6 +123,14 @@ spec:
       {{- if and .Values.bbtests .Values.bbtests.scripts }}
       {{- if or .Values.bbtests.scripts.envs .Values.bbtests.scripts.secretEnvs }}
       env:
+        - name: K8S_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: K8S_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
       {{- if .Values.bbtests.scripts.envs }}
       {{- range $k, $v := .Values.bbtests.scripts.envs }}
         - name: {{ tpl $k $ }}
