@@ -64,7 +64,7 @@ spec:
       {{- if and .Values.bbtests .Values.bbtests.scripts .Values.bbtests.scripts.image }}
       image: {{ .Values.bbtests.scripts.image }}
       {{- else }}
-      image: "registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.32.6"
+      image: "registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.32.8"
       {{- end }}
       imagePullPolicy: IfNotPresent
       workingDir: /test

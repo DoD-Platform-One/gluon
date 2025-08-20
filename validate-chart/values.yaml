@@ -5,7 +5,7 @@ replicaCount: 1
 image:
   repository: "registry1.dso.mil/ironbank/opensource/nginx/nginx"
   pullPolicy: Always
-  tag: "1.28.0"
+  tag: "1.29.0"
 
 imagePullSecrets:
   - name: private-registry
@@ -39,7 +39,7 @@ affinity: {}
 bbtests:
   enabled: true
   scripts:
-    image: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.32.6
+    image: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.32.8
     permissions:
       apiGroups:
         - ""
@@ -57,7 +57,7 @@ bbtests:
 waitJob:
   enabled: true
   scripts:
-    image: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.32.6
+    image: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.32.8
   permissions:
     apiGroups:
       - ""
