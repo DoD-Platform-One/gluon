@@ -3,7 +3,7 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: allow-egress-from-{{ .Chart.Name }}-cypress-test-to-anywhere-any-port
+  name: allow-egress-from-{{ .Release.Name }}-cypress-test-to-anywhere-any-port
   namespace: {{ .Release.Namespace }}
   annotations:
     helm.sh/hook: test
@@ -24,7 +24,7 @@ spec:
 kind: Pod
 apiVersion: v1
 metadata:
-  name: "{{ .Chart.Name }}-cypress-test"
+  name: "{{ .Release.Name }}-cypress-test"
   namespace: {{ .Release.Namespace }}
   annotations:
     "helm.sh/hook": test-success
@@ -60,12 +60,12 @@ spec:
   {{- if .Values.bbtests }}
   {{- if .Values.bbtests.cypress }}
   {{- if .Values.bbtests.cypress.exports }}
-  serviceAccountName: {{ .Chart.Name }}-cypress-sa
+  serviceAccountName: {{ .Release.Name }}-cypress-sa
   {{- end }}
   {{- end }}
   {{- end }}
   containers:
-    - name: {{ .Chart.Name }}-cypress-test
+    - name: {{ .Release.Name }}-cypress-test
       securityContext:
         capabilities:
           drop:
@@ -223,7 +223,7 @@ spec:
   volumes:
     - name: cypress-tests
       configMap:
-        name: "{{ .Chart.Name }}-cypress-config"
+        name: "{{ .Release.Name }}-cypress-config"
     - name: tmpdir
       emptyDir: {}
     - name: commondir
@@ -249,7 +249,7 @@ spec:
      {{- if and .Values.bbtests.cypress.persistence  .Values.bbtests.cypress.persistence.enabled  }}
     - name: cypress-artifacts
       persistentVolumeClaim:
-        claimName: "{{ .Chart.Name }}-cypress-pvc"
+        claimName: "{{ .Release.Name }}-cypress-pvc"
       {{- else }}
     - name: cypress-artifacts
       hostPath:
