@@ -23,7 +23,7 @@ spec:
         - name: private-registry
       containers:
       - name: wait-job
-        image: {{ .Values.waitJob.scripts.image | default "registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.32.6" }}
+        image: {{ .Values.waitJob.scripts.image | default "registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.32.8" }}
         imagePullPolicy: IfNotPresent
         workingDir: /wait
         env:
