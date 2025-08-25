@@ -1,7 +1,6 @@
 {{ define "gluon.wait.wait-job.base" -}}
 {{- if .Values.waitJob }}
-{{- if and .Values.waitJob.scripts .Values.waitJob.enabled }}
-{{- if .Values.waitJob.scripts.image }}
+{{- if .Values.waitJob.enabled }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -56,7 +55,7 @@ spec:
                 fieldPath: metadata.namespace
       containers:
       - name: wait-job
-        image: {{ .Values.waitJob.scripts.image | default "registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.32.8" }}
+        image: "registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.33.4"
         imagePullPolicy: IfNotPresent
         workingDir: /wait
         env:
@@ -109,17 +108,14 @@ spec:
           emptyDir: {}  
         - name: wait-scripts
           configMap:
-            name: "{{ .Release.Name }}-wait-script"               
-{{- end }}
+            name: "{{ .Release.Name }}-wait-script"
 {{- end }}
 {{- end }}
 {{- end }}
 ---
-
 {{ define "gluon.wait.wait-job-sa.base" -}}
 {{- if .Values.waitJob }}
-{{- if and .Values.waitJob.scripts .Values.waitJob.enabled }}
-{{- if .Values.waitJob.scripts.image }}
+{{- if .Values.waitJob.enabled }}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -133,13 +129,10 @@ automountServiceAccountToken: true
 {{- end }}
 {{- end }}
 {{- end }}
-{{- end }}
 ---
-
 {{ define "gluon.wait.wait-job-role.base" -}}
 {{- if .Values.waitJob }}
-{{- if and .Values.waitJob.scripts .Values.waitJob.enabled }}
-{{- if .Values.waitJob.scripts.image }}
+{{- if .Values.waitJob.enabled }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -165,13 +158,10 @@ rules:
 {{- end }}
 {{- end }}
 {{- end }}
-{{- end }}
 ---
-
 {{ define "gluon.wait.wait-job-rolebinding.base" -}}
 {{- if .Values.waitJob }}
-{{- if and .Values.waitJob.scripts .Values.waitJob.enabled }}
-{{- if .Values.waitJob.scripts.image }}
+{{- if .Values.waitJob.enabled }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
@@ -192,15 +182,11 @@ roleRef:
 {{- end }}
 {{- end }}
 {{- end }}
-{{- end }}
 ---
-
-
 {{- define "gluon.wait.wait-job.overrides" -}}
 {{- $values := (first .) }}
 {{- if $values.Values.waitJob }}
-{{- if and $values.Values.waitJob.scripts $values.Values.waitJob.enabled }}
-{{- if $values.Values.waitJob.scripts.image }}
+{{- if $values.Values.waitJob.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -226,27 +212,21 @@ spec:
 {{- end -}}
 {{- end -}}
 {{- end -}}
-{{- end -}}
 ---
 {{- define "gluon.wait.wait-job-sa.overrides" -}}
 {{- $values := (first .) }}
 {{- if $values.Values.waitJob }}
-{{- if and $values.Values.waitJob.scripts $values.Values.waitJob.enabled }}
-{{- if $values.Values.waitJob.scripts.image }}
+{{- if $values.Values.waitJob.enabled }}
 {{- include "gluon.util.merge" (append . "gluon.wait.wait-job-sa.base") -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}
-{{- end -}}
 ---
-
 {{- define "gluon.wait.wait-job-role.overrides" -}}
 {{- $values := (first .) }}
 {{- if $values.Values.waitJob }}
-{{- if and $values.Values.waitJob.scripts $values.Values.waitJob.enabled }}
-{{- if $values.Values.waitJob.scripts.image }}
+{{- if $values.Values.waitJob.enabled }}
 {{- include "gluon.util.merge" (append . "gluon.wait.wait-job-role.base") -}}
-{{- end -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}
@@ -254,10 +234,8 @@ spec:
 {{- define "gluon.wait.wait-job-rolebinding.overrides" -}}
 {{- $values := (first .) }}
 {{- if $values.Values.waitJob }}
-{{- if and $values.Values.waitJob.scripts $values.Values.waitJob.enabled }}
-{{- if $values.Values.waitJob.scripts.image }}
+{{- if $values.Values.waitJob.enabled }}
 {{- include "gluon.util.merge" (append . "gluon.wait.wait-job-rolebinding.base") -}}
-{{- end -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}

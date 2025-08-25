@@ -94,11 +94,7 @@ spec:
           drop:
           - ALL
         readOnlyRootFilesystem: true
-      {{- if .Values.bbtests }}
-      {{- if .Values.bbtests.cypress }}
-      image: {{ .Values.bbtests.cypress.image | default "registry1.dso.mil/ironbank/big-bang/cypress@sha256:93ca4e137f636e004efeb32cb1a43634745ee3fbe43593a80940bd69978354e4" }}
-      {{- end }}
-      {{- end }}
+      image:  "registry1.dso.mil/ironbank/big-bang/cypress@sha256:83e7c967bded348acbdd73ef76130b39ead7ee891de1bff3a83b2699353ba652"
       imagePullPolicy: IfNotPresent
       command:
       - "/bin/bash"

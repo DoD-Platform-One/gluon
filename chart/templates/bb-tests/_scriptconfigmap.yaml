@@ -1,7 +1,6 @@
 {{- define "gluon.tests.script-configmap.base" }}
 {{- if .Values.bbtests }}
 {{- if and .Values.bbtests.scripts .Values.bbtests.enabled }}
-{{- if .Values.bbtests.scripts.image }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -18,15 +17,12 @@ data:
 {{- end }}
 {{- end }}
 {{- end }}
-{{- end }}
 
 {{- define "gluon.tests.script-configmap.overrides" }}
 {{- $values := (first .) }}
 {{- if $values.Values.bbtests }}
 {{- if and $values.Values.bbtests.scripts $values.Values.bbtests.enabled }}
-{{- if $values.Values.bbtests.scripts.image }}
 {{- include "gluon.util.merge" (append . "gluon.tests.script-configmap.base") }}
-{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}

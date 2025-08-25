@@ -39,7 +39,6 @@ affinity: {}
 bbtests:
   enabled: true
   scripts:
-    image: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.32.8
     permissions:
       apiGroups:
         - ""
@@ -56,8 +55,6 @@ bbtests:
 
 waitJob:
   enabled: true
-  scripts:
-    image: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.32.8
   permissions:
     apiGroups:
       - ""

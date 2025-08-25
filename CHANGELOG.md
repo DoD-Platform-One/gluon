@@ -5,6 +5,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 Note that changelog entries are only added when there are changes to the chart (docs changes do not require a new version/changelog entry).
 
 ---
+## [0.8.4]
+
+### Changed
+
+- Updated kubectl to 1.33.4 forced this for waitjob
+- Updated Cypress to 15.0.0 enforced only this specific cypress version for this specific gluon version
+
 ## [0.8.3]
 
 ### Added
