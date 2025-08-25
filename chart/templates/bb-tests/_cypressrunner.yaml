@@ -64,6 +64,29 @@ spec:
   {{- end }}
   {{- end }}
   {{- end }}
+  initContainers:
+    - name: network-wait-online
+      securityContext:
+        capabilities:
+          drop:
+          - ALL
+        readOnlyRootFilesystem: true
+      image: registry1.dso.mil/ironbank/big-bang/cypress@sha256:93ca4e137f636e004efeb32cb1a43634745ee3fbe43593a80940bd69978354e4
+      imagePullPolicy: IfNotPresent
+      command:
+      - "/bin/bash"
+      - "-c"
+      - |
+        attempts=0
+        until curl https://repo1.dso.mil > /dev/null; do
+          attempts=$((attempts+1))
+          if [ $attempts -ge 10 ]; then
+            echo "Network is unreachable after 10 attempts, exiting."
+            exit 1
+          fi
+          echo "Network is unreachable, retrying in 6 seconds..."
+          sleep 6
+        done
   containers:
     - name: {{ .Release.Name }}-cypress-test
       securityContext:

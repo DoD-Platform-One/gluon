@@ -54,6 +54,34 @@ spec:
   {{- end }}
   {{- end }}
   serviceAccountName: {{ .Release.Name }}-script-sa
+  initContainers:
+    - name: network-wait-online
+      securityContext:
+        capabilities:
+          drop:
+          - ALL
+        readOnlyRootFilesystem: true
+      image: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.32.8
+      imagePullPolicy: IfNotPresent
+      command:
+      - "/bin/bash"
+      - "-c"
+      - |
+        attempts=0
+        until kubectl auth can-i --list --namespace $K8S_NAMESPACE > /dev/null; do
+          attempts=$((attempts+1))
+          if [ $attempts -ge 10 ]; then
+            echo "Network is unreachable after 10 attempts, exiting."
+            exit 1
+          fi
+          echo "Network is unreachable, retrying in 6 seconds..."
+          sleep 6
+        done
+      env:
+      - name: K8S_NAMESPACE
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.namespace
   containers:
     - name: {{ .Release.Name }}-script-test
       securityContext:

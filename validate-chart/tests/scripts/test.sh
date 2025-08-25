@@ -3,8 +3,6 @@ set -e
 
 echo "Hello from Test Script"
 
-sleep 15
-
 if ! curl https://www.google.com >/dev/null 2>&1; then
   echo "Could not curl out to the web."
   exit 1
