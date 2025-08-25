@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 Note that changelog entries are only added when there are changes to the chart (docs changes do not require a new version/changelog entry).
 
 ---
+## [0.8.3]
+
+### Added
+
+- Added an `initContainer` to all the jobs that confirms network connectivity before the main container starts
+
 ## [0.8.2]
 
 ### Changed
