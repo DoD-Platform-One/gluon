@@ -2,10 +2,9 @@
 {{- define "gluon-test.cypress-configmap" }}
 {{- end }}
 ---
-{{- define "gluon-test.cypress-runner" -}}
 {{- include "gluon.tests.cypress-runner.overrides" (list . "gluon-test.cypress-runner") -}}
+{{- define "gluon-test.cypress-runner" -}}
+metadata:
+  labels:
+    MyOverride: IsHere
 {{- end }}
----
-{{- include "gluon.tests.cypress-configmap.base" .}}
----
-{{- include "gluon.tests.cypress-runner.base" .}}

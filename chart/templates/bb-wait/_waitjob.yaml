@@ -1,6 +1,7 @@
 {{ define "gluon.wait.wait-job.base" -}}
 {{- if .Values.waitJob }}
 {{- if .Values.waitJob.enabled }}
+---
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -208,34 +209,31 @@ spec:
   policyTypes:
     - Egress
 ---
-{{ include "gluon.util.merge" (append . "gluon.wait.wait-job.base") -}}
+{{ include "gluon.util.merge" (append . "gluon.wait.wait-job.base") | nindent 0 -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}
----
 {{- define "gluon.wait.wait-job-sa.overrides" -}}
 {{- $values := (first .) }}
 {{- if $values.Values.waitJob }}
 {{- if $values.Values.waitJob.enabled }}
-{{- include "gluon.util.merge" (append . "gluon.wait.wait-job-sa.base") -}}
+{{- include "gluon.util.merge" (append . "gluon.wait.wait-job-sa.base") | nindent 0 -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}
----
 {{- define "gluon.wait.wait-job-role.overrides" -}}
 {{- $values := (first .) }}
 {{- if $values.Values.waitJob }}
 {{- if $values.Values.waitJob.enabled }}
-{{- include "gluon.util.merge" (append . "gluon.wait.wait-job-role.base") -}}
+{{- include "gluon.util.merge" (append . "gluon.wait.wait-job-role.base") | nindent 0 -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}
----
 {{- define "gluon.wait.wait-job-rolebinding.overrides" -}}
 {{- $values := (first .) }}
 {{- if $values.Values.waitJob }}
 {{- if $values.Values.waitJob.enabled }}
-{{- include "gluon.util.merge" (append . "gluon.wait.wait-job-rolebinding.base") -}}
+{{- include "gluon.util.merge" (append . "gluon.wait.wait-job-rolebinding.base") | nindent 0 -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}
