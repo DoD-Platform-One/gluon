@@ -2,10 +2,9 @@
 {{- define "gluon-test.script-configmap" -}}
 {{- end }}
 ---
-{{- define "gluon-test.script-runner" -}}
 {{- include "gluon.tests.script-runner.overrides" (list . "gluon-test.script-runner") -}}
+{{- define "gluon-test.script-runner" -}}
+metadata:
+  labels:
+    MyOverride: IsHere
 {{- end }}
----
-{{- include "gluon.tests.script-configmap.base" .}}
----
-{{- include "gluon.tests.script-runner.base" .}}

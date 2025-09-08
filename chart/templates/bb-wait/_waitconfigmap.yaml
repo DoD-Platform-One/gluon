@@ -1,6 +1,7 @@
 {{- define "gluon.wait.wait-job-configmap.base" }}
 {{- if .Values.waitJob }}
 {{- if .Values.waitJob.enabled }}
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -22,7 +23,7 @@ data:
 {{- $values := (first .) }}
 {{- if $values.Values.waitJob }}
 {{- if $values.Values.waitJob.enabled }}
-{{- include "gluon.util.merge" (append . "gluon.wait.wait-job-configmap.base") }}
+{{- include "gluon.util.merge" (append . "gluon.wait.wait-job-configmap.base") | nindent 0 }}
 {{- end }}
 {{- end }}
 {{- end }}

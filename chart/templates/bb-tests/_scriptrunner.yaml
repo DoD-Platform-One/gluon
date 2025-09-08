@@ -1,25 +1,5 @@
 {{- define "gluon.tests.script-runner.tpl" -}}
 {{- if ne false ((.Values.bbtests).scripts).enabled }}
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: allow-egress-from-{{ .Release.Name }}-script-test-to-anywhere-any-port
-  namespace: {{ .Release.Namespace }}
-  annotations:
-    helm.sh/hook: test
-    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
-spec:
-  egress:
-    - to:
-        - ipBlock:
-            cidr: 0.0.0.0/0
-            except:
-              - 169.254.169.254/32
-  podSelector:
-    matchLabels:
-      helm-test: enabled
-  policyTypes:
-    - Egress
 ---
 kind: Pod
 apiVersion: v1
@@ -221,11 +201,10 @@ spec:
 {{- if .Values.bbtests.enabled }}
 
 {{- if .Values.bbtests.scripts }}
-{{- include "gluon.tests.script-rbac" . }}
----
+{{- include "gluon.tests.script-rbac" . | nindent 0 }}
 {{- end }}
-
-{{- include "gluon.tests.script-runner.tpl" . }}
+{{- include "gluon.tests.script-netpol.tpl" . | nindent 0 }}
+{{- include "gluon.tests.script-runner.tpl" . | nindent 0 }}
 {{- end }}
 {{- end }}
 {{- end }}
@@ -234,9 +213,9 @@ spec:
 {{- $values := (first .) }}
 {{- if $values.Values.bbtests }}
 {{- if and $values.Values.bbtests.scripts $values.Values.bbtests.enabled }}
-{{- include "gluon.tests.script-rbac" $values }}
----
-{{- include "gluon.util.merge" (append . "gluon.tests.script-runner.base") }}
+{{- include "gluon.tests.script-rbac" $values | nindent 0 }}
+{{- include "gluon.util.merge" (append . "gluon.tests.script-runner.tpl") | nindent 0 }}
+{{- include "gluon.tests.script-netpol.tpl" $values | nindent 0 }}
 {{- end }}
 {{- end }}
 {{- end }}

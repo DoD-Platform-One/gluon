@@ -1,25 +1,5 @@
 {{- define "gluon.tests.cypress-runner.tpl" }}
 {{- if ne false ((.Values.bbtests).cypress).enabled }}
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: allow-egress-from-{{ .Release.Name }}-cypress-test-to-anywhere-any-port
-  namespace: {{ .Release.Namespace }}
-  annotations:
-    helm.sh/hook: test
-    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
-spec:
-  egress:
-    - to:
-        - ipBlock:
-            cidr: 0.0.0.0/0
-            except:
-              - 169.254.169.254/32
-  podSelector:
-    matchLabels:
-      helm-test: enabled
-  policyTypes:
-    - Egress
 ---
 kind: Pod
 apiVersion: v1
@@ -295,12 +275,11 @@ spec:
 
 {{- if .Values.bbtests.cypress }}
 {{- if .Values.bbtests.cypress.exports }}
-{{- include "gluon.tests.cypress-rbac" . }}
----
+{{- include "gluon.tests.cypress-rbac" . | nindent 0 }}
 {{- end }}
 {{- end }}
-
-{{- include "gluon.tests.cypress-runner.tpl" . }}
+{{- include "gluon.tests.cypress-netpol.tpl" . | nindent 0 }}
+{{- include "gluon.tests.cypress-runner.tpl" . | nindent 0 }}
 {{- end }}
 {{- end }}
 {{- end }}
@@ -311,14 +290,13 @@ spec:
 {{- if $values.Values.bbtests.enabled }}
 {{- if $values.Values.bbtests.cypress }}
 {{- if $values.Values.bbtests.cypress.exports }}
-{{- include "gluon.tests.cypress-rbac" $values }}
----
+{{- include "gluon.tests.cypress-rbac" $values | nindent 0 }}
 {{- end }}
 
 {{- end }}
-{{- include "gluon.util.merge" (append . "gluon.tests.cypress-runner.tpl") }}
-{{- include "gluon.tests.cypress-pvc.tpl" $values }}
-
+{{- include "gluon.util.merge" (append . "gluon.tests.cypress-runner.tpl") | nindent 0 }}
+{{- include "gluon.tests.cypress-netpol.tpl" $values | nindent 0 }}
+{{- include "gluon.tests.cypress-pvc.tpl" $values | nindent 0 }}
 {{- end }}
 {{- end }}
 {{- end }}

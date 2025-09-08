@@ -42,8 +42,7 @@ spec:
 {{- if $values.Values.bbtests.cypress.artifacts }}
 {{- if $values.Values.bbtests.cypress.persistence }}
 {{- if $values.Values.bbtests.cypress.persistence.enabled }}
----
-{{- include "gluon.util.merge" (append . "gluon.tests.cypress-pvc.tpl") }}
+{{- include "gluon.util.merge" (append . "gluon.tests.cypress-pvc.tpl") | nindent 0 }}
 
 {{- end }}
 {{- end }}
