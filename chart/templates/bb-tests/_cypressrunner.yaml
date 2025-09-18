@@ -51,7 +51,7 @@ spec:
           drop:
           - ALL
         readOnlyRootFilesystem: true
-      image: registry1.dso.mil/ironbank/big-bang/cypress@sha256:93ca4e137f636e004efeb32cb1a43634745ee3fbe43593a80940bd69978354e4
+      image: registry1.dso.mil/ironbank/big-bang/cypress@sha256:59744a4e9b0f32b2f305dd263a33a8e1b7e70be91eaffbe14b9d9337d6bc40f2 # renovate: tag=15.2.0
       imagePullPolicy: IfNotPresent
       command:
       - "/bin/bash"
@@ -74,7 +74,7 @@ spec:
           drop:
           - ALL
         readOnlyRootFilesystem: true
-      image:  "registry1.dso.mil/ironbank/big-bang/cypress@sha256:83e7c967bded348acbdd73ef76130b39ead7ee891de1bff3a83b2699353ba652"
+      image:  "registry1.dso.mil/ironbank/big-bang/cypress@sha256:59744a4e9b0f32b2f305dd263a33a8e1b7e70be91eaffbe14b9d9337d6bc40f2" # renovate: tag=15.2.0
       imagePullPolicy: IfNotPresent
       command:
       - "/bin/bash"
