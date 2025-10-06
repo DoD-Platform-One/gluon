@@ -1,75 +1,76 @@
 {
-  "baseBranches": [
-      "master"
-  ],
-  "configWarningReuseIssue": false,
-  "dependencyDashboard": true,
-  "dependencyDashboardTitle": "Renovate: Upgrade images",
-  "draftPR": true,
-  "enabledManagers": [
-      "custom.regex"
-  ],
-  "labels": ["kind::maintenance","renovate"],
-  "packageRules": [
-      {
-          "matchDatasources": [
-            "docker"
-          ]
-      },
-      {
-          "matchPackageNames": [
-            "registry1.dso.mil/ironbank/big-bang/cypress"
-          ],
-          "pinDigests": true
-      }
-  ],
-  "customManagers": [
-      {
-          "customType": "regex",
-          "fileMatch": [
-            ".*values\\.yaml$"
-          ],
-          "matchStrings": [
-            "repository:\\s*\"(registry1.dso.mil/ironbank/opensource/nginx/nginx)\"\\s*\\n\\s*pullPolicy:\\s*Always\\s*\\n\\s*tag:\\s*\"(?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)\""
-          ],
-          "depNameTemplate": "registry1.dso.mil/ironbank/opensource/nginx/nginx",
-          "datasourceTemplate": "docker"
-      },
-      {
-          "customType": "regex",
-          "fileMatch": [
-          ".*values\\.yaml$"
-          ],
-          "matchStrings": [
-            "\\s*image:\\s*(?<depName>registry1\\.dso\\.mil\\/ironbank\\/opensource\\/kubernetes\\/kubectl):(?<currentValue>v[\\d\\.]+)"
-          ],
-          "depNameTemplate": "registry1.dso.mil/ironbank/opensource/kubernetes/kubectl",
-          "datasourceTemplate": "docker"
-      },
-      {
-          "customType": "regex",
-          "fileMatch": [
-          ".*/_waitjob\\.yaml$",
-          ".*/_scriptrunner\\.yaml$"
-          ],
-          "matchStrings": [
-            "image:\\s*[\"']?(?<depName>registry1\\.dso\\.mil/ironbank/opensource/kubernetes/kubectl):(?<currentValue>v[0-9]+\\.[0-9]+\\.[0-9]+)[\"']?"
-          ],
-          "datasourceTemplate": "docker"
-      },
-      {
-          "customType": "regex",
-          "fileMatch": [
-          ".*/_cypressrunner\\.yaml$"
-          ],
-          "matchStrings": [
-            "image:\\s*[\"']?(?<depName>registry1\\.dso\\.mil/ironbank/big-bang/cypress)@sha256:[a-f0-9]+[\"']?\\s*#\\s*renovate:\\s*tag=(?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)"
-          ],
-          "datasourceTemplate": "docker",
-          "versioningTemplate": "docker"
-      }
+    "baseBranches": [
+        "master"
+    ],
+    "configWarningReuseIssue": false,
+    "dependencyDashboard": true,
+    "dependencyDashboardTitle": "Renovate: Upgrade images",
+    "draftPR": true,
+    "enabledManagers": [
+        "custom.regex"
+    ],
+    "labels": [
+        "kind::maintenance",
+        "renovate"
+    ],
+    "packageRules": [
+        {
+            "matchDatasources": [
+                "docker"
+            ]
+        },
+        {
+            "matchPackageNames": [
+                "registry1.dso.mil/ironbank/big-bang/cypress"
+            ],
+            "pinDigests": true
+        }
+    ],
+    "customManagers": [
+        {
+            "customType": "regex",
+            "managerFilePatterns": [
+                "/.*values\\.yaml$/"
+            ],
+            "matchStrings": [
+                "repository:\\s*\"(registry1.dso.mil/ironbank/opensource/nginx/nginx)\"\\s*\\n\\s*pullPolicy:\\s*Always\\s*\\n\\s*tag:\\s*\"(?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)\""
+            ],
+            "depNameTemplate": "registry1.dso.mil/ironbank/opensource/nginx/nginx",
+            "datasourceTemplate": "docker"
+        },
+        {
+            "customType": "regex",
+            "managerFilePatterns": [
+                "/.*values\\.yaml$/"
+            ],
+            "matchStrings": [
+                "\\s*image:\\s*(?<depName>registry1\\.dso\\.mil\\/ironbank\\/opensource\\/kubernetes\\/kubectl):(?<currentValue>v[\\d\\.]+)"
+            ],
+            "depNameTemplate": "registry1.dso.mil/ironbank/opensource/kubernetes/kubectl",
+            "datasourceTemplate": "docker"
+        },
+        {
+            "customType": "regex",
+            "managerFilePatterns": [
+                "/.*/_waitjob\\.yaml$/",
+                "/.*/_scriptrunner\\.yaml$/"
+            ],
+            "matchStrings": [
+                "image:\\s*[\"']?(?<depName>registry1\\.dso\\.mil/ironbank/opensource/kubernetes/kubectl):(?<currentValue>v[0-9]+\\.[0-9]+\\.[0-9]+)[\"']?"
+            ],
+            "datasourceTemplate": "docker"
+        },
+        {
+            "customType": "regex",
+            "managerFilePatterns": [
+                "/.*/_cypressrunner\\.yaml$/"
+            ],
+            "matchStrings": [
+                "image:\\s*[\"']?(?<depName>registry1\\.dso\\.mil/ironbank/big-bang/cypress)@sha256:[a-f0-9]+[\"']?\\s*#\\s*renovate:\\s*tag=(?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)"
+            ],
+            "datasourceTemplate": "docker",
+            "versioningTemplate": "docker"
+        }
     ],
     "separateMajorMinor": false
-  }
-  
-  
+}
