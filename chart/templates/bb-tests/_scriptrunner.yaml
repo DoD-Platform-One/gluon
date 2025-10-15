@@ -41,7 +41,7 @@ spec:
           drop:
           - ALL
         readOnlyRootFilesystem: true
-      image: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.33.5
+      image: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.33
       imagePullPolicy: IfNotPresent
       command:
       - "/bin/bash"
@@ -71,7 +71,7 @@ spec:
         readOnlyRootFilesystem: true
       {{- if .Values.bbtests }}
       {{- if .Values.bbtests.scripts }}
-      image: {{ .Values.bbtests.scripts.image | default "registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.33.5" }}
+      image: {{ .Values.bbtests.scripts.image | default "registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.33" }}
       {{- end }}
       {{- end }}
       imagePullPolicy: IfNotPresent
