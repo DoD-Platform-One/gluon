@@ -11,7 +11,9 @@
     ],
     "labels": [
         "kind::maintenance",
-        "renovate"
+        "renovate",
+        "team::pipelines",
+        "status::ready-to-work"
     ],
     "packageRules": [
         {
@@ -24,6 +26,13 @@
                 "registry1.dso.mil/ironbank/big-bang/cypress"
             ],
             "pinDigests": true
+        },
+        {
+            "matchPackageNames": [
+                "registry1.dso.mil/ironbank/opensource/kubernetes/kubectl"
+            ],
+            "matchUpdateTypes": ["patch"],
+            "enabled": false
         }
     ],
     "customManagers": [
