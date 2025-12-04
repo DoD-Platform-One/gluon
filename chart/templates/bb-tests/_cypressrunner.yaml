@@ -56,7 +56,7 @@ spec:
           drop:
           - ALL
         readOnlyRootFilesystem: true
-      image: {{ dig "image" "registry1.dso.mil/ironbank/big-bang/cypress:15.5.0" .Values.bbtests.cypress }}
+      image: {{ dig "image" "registry1.dso.mil/ironbank/big-bang/cypress:15.7.0" .Values.bbtests.cypress }}
       imagePullPolicy: IfNotPresent
       command:
       - "/bin/bash"
@@ -79,7 +79,7 @@ spec:
           drop:
           - ALL
         readOnlyRootFilesystem: true
-      image: {{ dig "image" "registry1.dso.mil/ironbank/big-bang/cypress:15.5.0" .Values.bbtests.cypress }}
+      image: {{ dig "image" "registry1.dso.mil/ironbank/big-bang/cypress:15.7.0" .Values.bbtests.cypress }}
       imagePullPolicy: IfNotPresent
       command:
       - "/bin/bash"
