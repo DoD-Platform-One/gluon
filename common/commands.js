@@ -101,7 +101,7 @@ Cypress.Commands.add('loadGrafanaDashboard', (dashboardName) => {
   cy.intercept('POST', '**/query*').as('apiQuery')
   cy.get('input[placeholder="Search for dashboards and folders"]').type(dashboardName)
 
-  cy.get('[data-testid*="browse-dashboards-table"]').then(($body) => {
+  cy.get('body').then(($body) => {
     const newSelector = `div[data-testid*="browse dashboards row ${dashboardName}"]`;
     const oldSelector = `a[title="${dashboardName}"]`;
 
