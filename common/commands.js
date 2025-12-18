@@ -100,10 +100,22 @@ Cypress.Commands.add('validatePromTarget', (monitorText, match) => {
 Cypress.Commands.add('loadGrafanaDashboard', (dashboardName) => {
   cy.intercept('POST', '**/query*').as('apiQuery')
   cy.get('input[placeholder="Search for dashboards and folders"]').type(dashboardName)
-  cy.get(`a[title="${dashboardName}"]`).click()
+
+  cy.get('[data-testid*="browse-dashboards-table"]').then(($body) => {
+    const newSelector = `div[data-testid*="browse dashboards row ${dashboardName}"]`;
+    const oldSelector = `a[title="${dashboardName}"]`;
+
+    if ($body.find(newSelector).length > 0) {
+      cy.get(newSelector).click();
+    } else {
+      cy.get(oldSelector).click();
+    }
+  })
+
   cy.wait('@apiQuery', {timeout: 30000}).then((interception) => {
       expect(interception.response.statusCode).to.equal(200);
   })
+
   cy.get('title').contains(dashboardName)
 })
 
