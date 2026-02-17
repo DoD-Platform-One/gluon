@@ -78,18 +78,17 @@ Next, include values that would be needed for the wait-jobs in your `chart/value
 
 The following values can be configured for the wait-job in your `chart/values.yaml` file:
 
-- `waitJob.scripts.image`: This defines the container image to be used for running scripts in the wait-job. 
-- `waitJob.permissions.apiGroups`: This defines the API groups that the wait-job should have access to. This should be a list of API groups.
-- `waitJob.permissions.resources`: This defines the resources that the wait-job should have access to. This should be a list of resources.
-- `waitJob.permissions.verbs`: This (optional) list defines the verbs that can be taken upon the resources the wait-job has access to. If not provided, this defaults to `["list", "get", "watch"]`.
+- `waitJob.image`: This defines the container image to be used for running scripts in the wait-job. Check [Waitjob.yaml](https://repo1.dso.mil/big-bang/product/packages/gluon/-/blob/master/chart/templates/bb-wait/_waitjob.yaml?ref_type=heads) for the latest default version.
+- `waitJob.permissions.apiGroups`: This defines the API groups that the wait-job should have access to. This should be a list of API groups. If not provided, this defaults to `[""]` (core API group).
+- `waitJob.permissions.resources`: This defines the resources that the wait-job should have access to. This should be a list of resources. If not provided, this defaults to `["pods"]`.
+- `waitJob.permissions.verbs`: This (optional) list defines the verbs that can be taken upon the resources the wait-job has access to. If not provided, this defaults to `["get", "list", "watch"]`.
 
 A sample is included below:
 
 ```yaml
 waitJob:
   enabled: true
-  scripts:
-    image: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.29.6
+  image: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.34
   permissions:
     apiGroups:
      - minio.min.io
@@ -107,7 +106,9 @@ waitJob:
 ```
 
 ### Wait script
-Finally, add your `wait.sh` script to the `templates/wait` folder. This file will contain the wait conditions for you specified resources.
+Finally, add your `wait.sh` script to the `chart/wait` folder (at the same level as `templates/`, not inside it). This file will contain the wait conditions for your specified resources.
+
+> **Note:** The wait-job template also creates a NetworkPolicy that allows egress traffic from the wait-job pod. This is automatically included when using the `gluon.wait.wait-job.overrides` template.
 
 Your final directory structure and files should look like this:
 
