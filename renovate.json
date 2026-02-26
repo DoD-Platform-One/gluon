@@ -2,6 +2,7 @@
     "baseBranches": [
         "master"
     ],
+    "branchName": "renovate/ironbank",
     "configWarningReuseIssue": false,
     "dependencyDashboard": true,
     "dependencyDashboardTitle": "Renovate: Upgrade images",
@@ -25,7 +26,9 @@
             "matchPackageNames": [
                 "registry1.dso.mil/ironbank/opensource/kubernetes/kubectl"
             ],
-            "matchUpdateTypes": ["patch"],
+            "matchUpdateTypes": [
+                "patch"
+            ],
             "enabled": false
         }
     ],
